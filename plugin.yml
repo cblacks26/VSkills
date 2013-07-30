@@ -1,0 +1,77 @@
+name: VSkills
+main: me.cblacks26.vskills.Main
+version: 1.0
+author: cblacks26
+commands:
+    MOTD:
+        description: Displays the message of the day
+        usage: /Motd
+    EXP:
+        description: Displays the player's Rank, Levels, and Exp to next Level
+        usage: /Exp [player]
+    Stats:
+        description: Displays the Player's Kills, Deaths, and K/D Ratio
+        usage: /Stats [player]
+    Leaderboards:
+        description: Displays the top 8 Player's Kills, Deaths, and K/D Ratio, Rank, Levels
+        usage: /Leaderboards <options>
+    Tokens:
+        description: Allows you to spend your tokens gained on rank ups
+        usage: /Tokens <options>
+    Reset:
+        description: Sets the given player's Exp, Level, Rank
+        usage: /Reset <player>
+    VGod:
+        description: Gives the specified player god mode
+        usage: /VGod <player>
+permissions:
+    vskills.basic:
+        description: Gives the basic commands
+        children:
+            vskills.exp: true
+            vskills.stats: true
+            vskills.motd: true
+            vskills.leaderboards: true
+            vskills.tokens: true
+    vskills.mod:
+        description: Gives commands made for moderators
+        children:
+            vskills.exp.others: true
+            vskills.stats.others: true
+            vskills.reset: true
+            vskills.god.others: true
+    vskills.god.others:
+        description: Gives other players god mode
+        default: op
+        children:
+            vskills.god: true
+    vskills.god:
+        description: Gives the player god mode
+    vskills.reset:
+        description: Sets the given player's Exp, Level, Rank
+    vskills.exp.others:
+        description: Displays the player designated's Rank, Levels, and Exp to next Level
+        default: op
+        children:
+            vskills.exp: true
+    vskills.stats.others:
+        description: Displays the Player designated's Kills, Deaths, and K/D Ratio
+        default: op
+        children:
+            vskills.exp: true
+    vskills.leaderboards:
+        description: Displays the top 8 Player's Kills, Deaths, and K/D Ratio, Rank, Levels
+        default: true
+    vskills.exp:
+        description: Displays the player's Rank, Levels, and Exp to next Level
+        default: true
+    vskills.stats:
+        description: Displays the Player's Kills, Deaths, and K/D Ratio
+        default: true
+    vskills.motd:
+        description: Displays the message of the day
+        default: true
+    vskills.tokens:
+        description: Allows you to spend your tokens gained on rank ups
+        default: true
+depend: [Vault]
