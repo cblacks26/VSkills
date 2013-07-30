@@ -1,9 +1,9 @@
-Skills
+VSkills
 ======
 
 This is my first bukkit plugin that I have made to help me learn Java
 
-Skills adds Skills like Mining and Building that you can level up with. Every time you level up you get closer to ranking up. Currently Ranks are shown in the player prefix's.
+VSkills adds Skills like Mining and Building that you can level up with. Every time you level up you get closer to ranking up. Currently Ranks are shown in the player prefix's.
 Rank names can be changed to whatever is suitable for your server. The skills are configurable to allow you to decide how players can gain xp. When players gain xp they also earn
 money based off of the BasePay times the xp gained. Skills are not the only thing that is included in this plugin. There is a player stats system that keeps track of the number
 of Kills, Deaths, and the players K/D ratio. Currently this plugin only supports SQLite but I hope to add MySQL in the future. This plugin does require Vault, so if chat,
@@ -30,47 +30,50 @@ Commands:
 - Stats:
     - description: Displays the Players Kills, Deaths, and K/D Ratio
     - usage: /Stats [player]
+- Tokens:
+    - description: Allows you to spend your tokens gained on rank ups
+    - usage: /Tokens <options>
+- Reset:
+    - description: Sets the given player's Exp, Level, Rank
+    - usage: /Reset <player>
+- VGod:
+    - description: Gives the specified player god mode
+    - usage: /VGod <player>
     
 Permissions:
-- skills.basic:
+- vskills.basic:
     - description: Gives the basic commands
     - children:
-        - skills.exp
-        - skills.motd
-        - skills.stats
-        - skills.leaderboards
-- skills.mod
+        - vskills.exp
+        - vskills.motd
+        - vskills.stats
+        - vskills.leaderboards
+        - vskills.tokens
+- vskills.mod
     - description: Gives commands for moderators
     - children:
-        - skills.exp.others
-        - skills.stats.others
-- skills.exp.others:
-    - description: Displays the player designated's Rank, Levels, and Exp to next Level
-    - default: op
+        - vskills.exp.others
+        - vskills.stats.others
+        - vskills.reset
+        - vskills.god.others
+- vskills.exp.others:
     - children:
-        - skills.exp
-- skills.stats.others:
-    - description: Displays the Player designated's Kills, Deaths, and K/D Ratio
-    - default: op
+        - vskills.exp
+- vskills.stats.others:
     - children:
-        - skills.exp
-- skills.leaderboards:
-    - description: Displays the top 8 Player's Kills, Deaths, and K/D Ratio, Rank, Levels
-    - default: true
-- skills.exp:
-    - description: Displays the player's Rank, Levels, and Exp to next Level
-    - default: true
-- skills.stats:
-    - description: Displays the Player's Kills, Deaths, and K/D Ratio
-    - default: true
-- skills.motd:
-    - description: Displays the message of the day
-    - default: true
+        - vskills.stats
+- vskills.god.others:
+    - children:
+        - vskills.god
+- vskills.leaderboards
+- vskills.exp
+- vskills.stats
+- vskills.motd
+- vskills.tokens
+- vskills.god
         
         
 Things I hope to add to the plugin:
 - MySQL support
 - Special Abilities for Skills
-- Token system for Ranking up
 - More Skills
-- Better system for Skills
