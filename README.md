@@ -3,6 +3,8 @@ VSkills
 
 This is my first bukkit plugin that I have made to help me learn Java
 
+http://dev.bukkit.org/bukkit-plugins/vskills/
+
 VSkills adds Skills like Mining and Building that you can level up with. Every time you level up you get closer to ranking up. Currently Ranks are shown in the player prefix's.
 Rank names can be changed to whatever is suitable for your server. The skills are configurable to allow you to decide how players can gain xp. When players gain xp they also earn
 money based off of the BasePay times the xp gained. Skills are not the only thing that is included in this plugin. There is a player stats system that keeps track of the number
