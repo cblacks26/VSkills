@@ -47,6 +47,9 @@ Permissions:
 - VSkills.tokens
 - VSkills.god
         
+Dependencies:
+- Vault
+- SQLibrary
         
 Things I hope to add to the plugin:
 - Special Abilities for Skills
