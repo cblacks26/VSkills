@@ -45,6 +45,8 @@ public class CommandReset implements CommandExecutor{
 						tp.sendMessage(ChatColor.GRAY + "You have been reset");
 						return true;
 					}
+				}else{
+					player.sendMessage(ChatColor.RED + "Usage: /VReset <player>");
 				}
 			}else{
 				if(args.length == 1){
@@ -68,11 +70,12 @@ public class CommandReset implements CommandExecutor{
 						tp.sendMessage(ChatColor.GRAY + "You have been reset");
 						return true;
 					}
+				}else{
+					sender.sendMessage(ChatColor.RED + "Usage: /VReset <player>");
 				}
 			}
 		}
 		return true;
 	}
-
 	
 }

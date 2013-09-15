@@ -99,5 +99,4 @@ public class PlayerListener implements Listener{
 			userManager.scoreboard(killer);
 		}
 	}
-	
 }

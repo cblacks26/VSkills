@@ -37,6 +37,8 @@ public class CommandTokens implements CommandExecutor{
 								double money = userManager.getMoney(player);
 								double newmoney = money + 0.01;
 								userManager.setMoney(player, newmoney);
+								userManager.setTokens(player, tokens - 1);
+								userManager.scoreboard(player);
 							}
 						}
 					}

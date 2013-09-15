@@ -37,6 +37,7 @@ public class VSkillsListener implements Listener{
 		int newtokens = tokens + 1;
 		userManager.setRank(player, newrank);
 		userManager.setTokens(player, newtokens);
+		userManager.scoreboard(player);
 		player.sendMessage(ChatColor.AQUA + "You Ranked up!");
 		Location loc = player.getLocation();
 		Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
@@ -81,6 +82,7 @@ public class VSkillsListener implements Listener{
 		Main.depositPlayer(player, money);
 		userManager.setJobXP(player, job, val);
 		rank.userLevelUp(player, job);
+		userManager.scoreboard(player);
 	}
 	
 	@EventHandler
@@ -92,6 +94,7 @@ public class VSkillsListener implements Listener{
 		int val = exp + xp;
 		userManager.setSkillXP(player, skill, val);
 		rank.userLevelUp(player, skill);
+		userManager.scoreboard(player);
 	}
 	
 }

@@ -65,9 +65,13 @@ public class UserManager {
     public Scoreboard jobsboard;
     public Scoreboard skillsboard;
     public Scoreboard statsboard;
+    public Scoreboard jobexpboard;
+    public Scoreboard skillexpboard;
     private Objective skills;
 	private Objective jobs;
 	private Objective stats;
+	private Objective jobsexp;
+	private Objective skillsexp;
 		
 	public void addUser(Player player){
 		String pname = player.getName();
@@ -300,7 +304,6 @@ public class UserManager {
 		}
 	}
 
-	
 	public double getMoney(Player player){
 		String pname = player.getName();
 		double m = money.get(pname);
@@ -451,6 +454,14 @@ public class UserManager {
 		stats = statsboard.registerNewObjective("Kills", "dummy");
 		stats.setDisplaySlot(DisplaySlot.SIDEBAR);
 		stats.setDisplayName("Stats");
+		jobexpboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		jobsexp = jobexpboard.registerNewObjective("Jobs Exp", "dummy");
+		jobsexp.setDisplaySlot(DisplaySlot.SIDEBAR);
+		jobsexp.setDisplayName("Jobs Exp to Level");
+		skillexpboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		skillsexp = skillexpboard.registerNewObjective("Skills Exp", "dummy");
+		skillsexp.setDisplaySlot(DisplaySlot.SIDEBAR);
+		skillsexp.setDisplayName("Skills Exp to Level");
 		
 		Score build = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Building: "));
 		build.setScore(getJobLvl(player, JobType.BUILDING));
@@ -469,6 +480,24 @@ public class UserManager {
 		
 		Score wc = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Woodcutting: "));
 		wc.setScore(getJobLvl(player, JobType.WOODCUTTING));
+		
+		Score buildxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Building: "));
+		buildxp.setScore(getXPToLevel(player, JobType.BUILDING));
+		
+		Score digxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Digging: "));
+		digxp.setScore(getXPToLevel(player, JobType.DIGGING));
+		
+		Score farmxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Farming: "));
+		farmxp.setScore(getXPToLevel(player, JobType.FARMING));
+		
+		Score huntxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Hunting: "));
+		huntxp.setScore(getXPToLevel(player, JobType.HUNTING));
+		
+		Score minexp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Mining: "));
+		minexp.setScore(getXPToLevel(player, JobType.MINING));
+		
+		Score wcxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Woodcutting: "));
+		wcxp.setScore(getXPToLevel(player, JobType.WOODCUTTING));
 		
 		Score archery = skills.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Archery: "));
 		archery.setScore(getSkillLvl(player, SkillType.ARCHERY));
@@ -491,6 +520,27 @@ public class UserManager {
 		Score unarmed = skills.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Unarmed: "));
 		unarmed.setScore(getSkillLvl(player, SkillType.UNARMED));
 		
+		Score archeryxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Archery: "));
+		archeryxp.setScore(getXPToLevel(player, SkillType.ARCHERY));
+		
+		Score axexp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Axes: "));
+		axexp.setScore(getXPToLevel(player, SkillType.AXE));
+		
+		Score hoexp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Hoe: "));
+		hoexp.setScore(getXPToLevel(player, SkillType.HOE));
+		
+		Score pickxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Pickaxes: "));
+		pickxp.setScore(getXPToLevel(player, SkillType.PICKAXE));
+		
+		Score shovelxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Shovels: "));
+		shovelxp.setScore(getXPToLevel(player, SkillType.SHOVEL));
+		
+		Score swordxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Swords: "));
+		swordxp.setScore(getXPToLevel(player, SkillType.SWORD));
+		
+		Score unarmedxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Unarmed: "));
+		unarmedxp.setScore(getXPToLevel(player, SkillType.UNARMED));
+		
 		Score kill = stats.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Kills: "));
 		kill.setScore(getKills(player));
 		
@@ -512,10 +562,13 @@ public class UserManager {
 			player.setScoreboard(skillsboard);
 		}else if(sb.get(pname) == "stats"){
 			player.setScoreboard(statsboard);
+		}else if(sb.get(pname) == "jobsexp"){
+			player.setScoreboard(jobexpboard);
+		}else if(sb.get(pname) == "skillsexp"){
+			player.setScoreboard(skillexpboard);
 		}else{
 			return;
 		}
-		
 	}
 	
 	public void setScoreboard(Player player, String type){
@@ -529,6 +582,12 @@ public class UserManager {
 		}else if(type == "stats"){
 			sb.put(pname, "stats");
 			player.setScoreboard(statsboard);
+		}else if(type == "jobsexp"){
+			sb.put(pname, "jobsexp");
+			player.setScoreboard(jobexpboard);
+		}else if(type == "skillsexp"){
+			sb.put(pname, "skillsexp");
+			player.setScoreboard(skillexpboard);
 		}else{
 			return;
 		}
@@ -653,23 +712,23 @@ public class UserManager {
 
 	public int getXPToLevel(Player player, JobType job){
 		int level = getJobLvl(player, job);
+		int xp = getJobXP(player, job);
 		int nextLevel = level + 1;
 		double half = nextLevel / 2;
-		int exp = getJobXP(player, job);
 		double expNeeded = 30 * nextLevel * half;
 		int expNeed = (int)Math.round(expNeeded);
-		int explvl = expNeed - exp;
-		return explvl;
+		int exp = expNeed - xp;
+		return exp;
 	}
 	
 	public int getXPToLevel(Player player, SkillType skill){
 		int level = getSkillLvl(player, skill);
+		int xp = getSkillXP(player, skill);
 		int nextLevel = level + 1;
 		double half = nextLevel / 2;
-		int exp = getSkillXP(player, skill);
 		double expNeeded = 30 * nextLevel * half;
 		int expNeed = (int)Math.round(expNeeded);
-		int explvl = expNeed - exp;
-		return explvl;
+		int exp = expNeed - xp;
+		return exp;
 	}
 }
