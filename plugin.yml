@@ -1,18 +1,30 @@
 name: VSkills
 main: com.github.vskills.Main
-version: 1.0
+version: 1.2
 author: cblacks26
 commands:
   VGod:
     description: Gives the specified player god mode
     usage: /VGod <player>
-  VStats:
+  VBoard:
     description: Toggles the types of scoreboards
-    usage: /VStats [jobs, skills, stats]
+    usage: /VBoard [JL, SL, JXP, SXP, Stats]
   VTokens:
     description: Uses the players reward tokens
     usage: /VTokens [money]
   VReset:
     description: Resets all of the players data
     usage: /VReset <player>
-depend: [Vault, SQLibrary]
+  VSkills:
+    description: Show the VSkills Help menu
+    usage: /VSkills
+  VSet:
+    description: Set the specified player's 
+    usage: /VSet <player> <Skill, Job> <Skill/Job name> <level, exp> <value> or <player> <rank> <value>
+  VSave:
+    description: Saves all the loaded player's data
+    usage: /VSave
+  VStats:
+    description: Shows different leaderboards
+    usage: /VStats [options]
+depend: [Vault]

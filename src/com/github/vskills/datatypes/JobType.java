@@ -2,12 +2,12 @@ package com.github.vskills.datatypes;
 
 public enum JobType {
 
-	BUILDING("Building"),
-	DIGGING("Digging"),
-	FARMING("Farming"),
-	HUNTING("Hunting"),
-	MINING("Mining"),
-	WOODCUTTING("Woodcutting");
+	BUILDER("Builder"),
+	DIGGER("Digger"),
+	FARMER("Farmer"),
+	HUNTER("Hunter"),
+	MINER("Miner"),
+	WOODCUTTER("Woodcutter");
 	
 	private String name;
 

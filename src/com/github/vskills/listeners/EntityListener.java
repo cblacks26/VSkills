@@ -38,7 +38,7 @@ public class EntityListener implements Listener{
                 if(a.getShooter() instanceof Player){
                 	Player player = (Player) a.getShooter();
                     int xp = entityUtil.getEntityXP(entity);
-                    JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.HUNTING, xp);
+                    JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.HUNTER, xp);
                     pm.callEvent(jobevent);
                     SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.ARCHERY, xp);
                     pm.callEvent(skillevent);
@@ -47,7 +47,7 @@ public class EntityListener implements Listener{
             	Player player = (Player) entityevent.getDamager();
             	ItemStack item = player.getItemInHand();
             	int xp = entityUtil.getEntityXP(entity);
-            	JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.HUNTING, xp);
+            	JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.HUNTER, xp);
                 pm.callEvent(jobevent);
             	if(itemUtil.isSword(item)){
                     SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.SWORD, xp);

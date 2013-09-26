@@ -25,9 +25,11 @@ public class CommandBoard implements CommandExecutor{
 						else if(args[0].equalsIgnoreCase("Stats")) userManager.setScoreboard(player, "stats");
 						else if(args[0].equalsIgnoreCase("SkillsXP") || args[0].equalsIgnoreCase("SXP")) userManager.setScoreboard(player, "skillsexp");
 						else if(args[0].equalsIgnoreCase("JobsXP") || args[0].equalsIgnoreCase("JXP")) userManager.setScoreboard(player, "jobsexp");
-						else return true;
+						else {
+							player.sendMessage("VBoard Options: JL, SL, JXP, SXP, Stats");
+						}
 					}else{
-						player.sendMessage("Usage: " + Commands.VBOARD.getDescription());
+						player.sendMessage("Usage: " + Commands.VBOARD.getUsage());
 					}
 				}else{
 					player.sendMessage(ChatColor.RED + "You don't have the Permissions for this command");

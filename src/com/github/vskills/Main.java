@@ -1,15 +1,11 @@
 package com.github.vskills;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
-import lib.PatPeter.SQLibrary.Database;
-import lib.PatPeter.SQLibrary.MySQL;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -27,6 +23,9 @@ import com.github.vskills.commands.CommandSave;
 import com.github.vskills.commands.CommandSet;
 import com.github.vskills.commands.CommandStats;
 import com.github.vskills.commands.CommandTokens;
+import com.github.vskills.database.Database;
+import com.github.vskills.database.MySQL;
+import com.github.vskills.database.SQLite;
 import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
 import com.github.vskills.listeners.BlockListener;
@@ -44,8 +43,6 @@ public class Main extends JavaPlugin{
 	private static Economy eco = null;
 	private static Permission perms = null;
 	private static Chat chat = null;
-	private Connection c;
-	private Statement s;
 	public static Database sql;
 	private String user;
 	private String password; 
@@ -62,6 +59,7 @@ public class Main extends JavaPlugin{
 	}
 
 	public void onEnable(){
+		getMySQL();
 		setupEconomy();
 		setupPermissions();
 		setupChat();
@@ -69,29 +67,7 @@ public class Main extends JavaPlugin{
 		getCommands();
 		scheduledTasks();
 		saveDefaultConfig();
-    	
-    	try {
-    		sql = getMySQL();
-            sql.open();
-        	c = sql.getConnection();
-        	c.setAutoCommit(false);
-			s = c.createStatement();
-			String table1 = "CREATE TABLE IF NOT EXISTS VSkills (name VARCHAR(50), kills Integer, deaths Integer," +
-					" tokens Integer, money Double, rank Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
-					" shovel Integer, sword Integer, unarmed Integer, building Integer, digging Integer, farming Integer," +
-					" hunting Integer, mining Integer, woodcutting Integer)";
-			String table2 = "CREATE TABLE IF NOT EXISTS VSkills_levels (name VARCHAR(50), archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
-					" shovel Integer, sword Integer, unarmed Integer, building Integer, digging Integer, farming Integer," +
-					" hunting Integer, mining Integer, woodcutting Integer)";
-			s.addBatch(table1);
-			s.addBatch(table2);
-			s.executeBatch();
-			c.commit();
-			s.close();
-			c.close();
-		} catch (SQLException e) {
-			writeError("Error Creating Tables: " + e.getMessage());
-		}
+		sql.createTables();
     	userManager.addUsers();
     	userManager.getScoreboards();
 	}
@@ -116,14 +92,27 @@ public class Main extends JavaPlugin{
 	}
 	
 	public Database getMySQL(){
-		this.user = this.getConfig().getString("MySQL.Username"); 
-        this.database = this.getConfig().getString("MySQL.Database"); 
-        this.password = this.getConfig().getString("MySQL.Password"); 
-        this.port = this.getConfig().getString("MySQL.Port"); 
-        this.hostname = this.getConfig().getString("MySQL.Hostname"); 
-    	
-        sql = new MySQL(log, "[VSkills]", hostname, Integer.parseInt(port), database, user, password);
-		return sql;
+		Boolean enabled = this.getConfig().getBoolean("MySQL.Enabled");
+        if(enabled == true){
+        	this.user = this.getConfig().getString("MySQL.Username"); 
+            this.database = this.getConfig().getString("MySQL.Database"); 
+            this.password = this.getConfig().getString("MySQL.Password"); 
+            this.port = this.getConfig().getString("MySQL.Port"); 
+            this.hostname = this.getConfig().getString("MySQL.Hostname"); 
+            sql = new MySQL(hostname, port, database, user, password);
+            return sql;
+        }else{
+        	File db = new File(getDataFolder() + File.separator + "Database.db");
+        	if(!db.exists()){
+        		try {
+					db.createNewFile();
+				} catch (IOException e) {
+					Main.writeError("Error Creating Database file: " + e.getMessage());
+				}
+        	}
+        	sql = new SQLite(db);
+        	return sql;
+        }
 	}
 	
 	private boolean setupChat()
@@ -217,18 +206,18 @@ public class Main extends JavaPlugin{
 	}
 
 	public static JobType matchJob(String s){
-		if(s.equalsIgnoreCase("Building")){
-			return JobType.BUILDING;
-		}else if(s.equalsIgnoreCase("Digging")){
-			return JobType.DIGGING;
-		}else if(s.equalsIgnoreCase("Farming")){
-			return JobType.FARMING;
-		}else if(s.equalsIgnoreCase("Hunting")){
-			return JobType.HUNTING;
-		}else if(s.equalsIgnoreCase("Mining")){
-			return JobType.MINING;
-		}else if(s.equalsIgnoreCase("Woodcutting")){
-			return JobType.WOODCUTTING;
+		if(s.equalsIgnoreCase("Builder")){
+			return JobType.BUILDER;
+		}else if(s.equalsIgnoreCase("Digger")){
+			return JobType.DIGGER;
+		}else if(s.equalsIgnoreCase("Farmer")){
+			return JobType.FARMER;
+		}else if(s.equalsIgnoreCase("Hunter")){
+			return JobType.HUNTER;
+		}else if(s.equalsIgnoreCase("Miner")){
+			return JobType.MINER;
+		}else if(s.equalsIgnoreCase("Woodcutter")){
+			return JobType.WOODCUTTER;
 		}else{
 			return null;
 		}
@@ -258,4 +247,5 @@ public class Main extends JavaPlugin{
 		scheduler = Executors.newScheduledThreadPool(1);
 		 scheduler.scheduleAtFixedRate(userSave, 10, 10, TimeUnit.MINUTES);
 	}
+
 }

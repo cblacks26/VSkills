@@ -376,10 +376,10 @@ public class CommandSet implements CommandExecutor{
 			Main.sql.open();
 			c = Main.sql.getConnection();
 			s = c.createStatement();
-			String update = "UPDATE VSkills SET rank = " + rank + ", building = 0, digging = 0, farming = 0, hunting = 0, mining = 0, " +
-					"woodcutting = 0 WHERE name = '" + pname + "'";
-			String updatelvl = "UPDATE VSkills_levels SET building = " + rank + ", digging = " + rank + ", farming = " + rank + 
-					", hunting = " + rank + ", mining = " + rank + ", woodcutting = " + rank + " WHERE name = '" + pname + "'";
+			String update = "UPDATE VSkills SET rank = " + rank + ", builder = 0, digger = 0, farmer = 0, hunter = 0, miner = 0, " +
+					"woodcutter = 0 WHERE name = '" + pname + "'";
+			String updatelvl = "UPDATE VSkills_levels SET builder = " + rank + ", digger = " + rank + ", farmer = " + rank + 
+					", hunter = " + rank + ", miner = " + rank + ", woodcutter = " + rank + " WHERE name = '" + pname + "'";
 			s.executeUpdate(update);
 			s.close();
 			s = c.createStatement();

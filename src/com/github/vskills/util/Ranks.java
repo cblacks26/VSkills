@@ -70,12 +70,12 @@ public class Ranks {
 		int cRank = Main.getUserManager().getRank(player);
 		int nRank = cRank + 1;
 		int lNeeded = nRank * 6;
-		int dlevel = Main.getUserManager().getJobLvl(player, JobType.DIGGING);
-		int mlevel = Main.getUserManager().getJobLvl(player, JobType.MINING);
-		int flevel = Main.getUserManager().getJobLvl(player, JobType.FARMING);
-		int hlevel = Main.getUserManager().getJobLvl(player, JobType.HUNTING);
-		int blevel = Main.getUserManager().getJobLvl(player, JobType.BUILDING);
-		int wclevel = Main.getUserManager().getJobLvl(player, JobType.WOODCUTTING);
+		int dlevel = Main.getUserManager().getJobLvl(player, JobType.DIGGER);
+		int mlevel = Main.getUserManager().getJobLvl(player, JobType.MINER);
+		int flevel = Main.getUserManager().getJobLvl(player, JobType.FARMER);
+		int hlevel = Main.getUserManager().getJobLvl(player, JobType.HUNTER);
+		int blevel = Main.getUserManager().getJobLvl(player, JobType.BUILDER);
+		int wclevel = Main.getUserManager().getJobLvl(player, JobType.WOODCUTTER);
 		int levels = dlevel + mlevel + flevel + hlevel + blevel + wclevel;
 		if(levels >= lNeeded){
 			return true;

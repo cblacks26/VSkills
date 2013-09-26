@@ -75,7 +75,7 @@ public class PlayerListener implements Listener{
 			if(itemUtil.isHoe(item) == true){
 				Material b = event.getClickedBlock().getType();
 				if(blockUtil.isFarmable(b)){
-					JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.FARMING, 1);
+					JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.FARMER, 1);
 					pm.callEvent(jobevent);
 					SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.HOE, 1);
 					pm.callEvent(skillevent);

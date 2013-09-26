@@ -32,12 +32,12 @@ public class UserManager {
 	private final HashMap<String, Integer> tokens = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> kills = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> deaths = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> digging = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> mining = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> hunting = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> farming = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> building = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> woodcutting = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> digger = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> miner = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> hunter = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> farmer = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> builder = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> woodcutter = new HashMap<String, Integer>();
 	
 	private final HashMap<String, Integer> archery = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> axe = new HashMap<String, Integer>();
@@ -47,12 +47,12 @@ public class UserManager {
 	private final HashMap<String, Integer> sword = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> unarmed = new HashMap<String, Integer>();
 	
-	private final HashMap<String, Integer> digginglvl = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> mininglvl = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> huntinglvl = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> farminglvl = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> buildinglvl = new HashMap<String, Integer>();
-	private final HashMap<String, Integer> woodcuttinglvl = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> diggerlvl = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> minerlvl = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> hunterlvl = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> farmerlvl = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> builderlvl = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> woodcutterlvl = new HashMap<String, Integer>();
 	
 	private final HashMap<String, Integer> archerylvl = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> axelvl = new HashMap<String, Integer>();
@@ -94,12 +94,12 @@ public class UserManager {
 			shovel.put(pname, rs.getInt("shovel"));
 			sword.put(pname, rs.getInt("sword"));
 			unarmed.put(pname, rs.getInt("unarmed"));
-			building.put(pname, rs.getInt("building"));
-			digging.put(pname, rs.getInt("digging"));
-			farming.put(pname, rs.getInt("farming"));
-			hunting.put(pname, rs.getInt("hunting"));
-			mining.put(pname, rs.getInt("mining"));
-			woodcutting.put(pname, rs.getInt("woodcutting"));
+			builder.put(pname, rs.getInt("builder"));
+			digger.put(pname, rs.getInt("digger"));
+			farmer.put(pname, rs.getInt("farmer"));
+			hunter.put(pname, rs.getInt("hunter"));
+			miner.put(pname, rs.getInt("miner"));
+			woodcutter.put(pname, rs.getInt("woodcutter"));
 			rs.close();
 			s.close();
 			s = c.createStatement();
@@ -112,12 +112,12 @@ public class UserManager {
 			shovellvl.put(pname, rs.getInt("shovel"));
 			swordlvl.put(pname, rs.getInt("sword"));
 			unarmedlvl.put(pname, rs.getInt("unarmed"));
-			buildinglvl.put(pname, rs.getInt("building"));
-			digginglvl.put(pname, rs.getInt("digging"));
-			farminglvl.put(pname, rs.getInt("farming"));
-			huntinglvl.put(pname, rs.getInt("hunting"));
-			mininglvl.put(pname, rs.getInt("mining"));
-			woodcuttinglvl.put(pname, rs.getInt("woodcutting"));
+			builderlvl.put(pname, rs.getInt("builder"));
+			diggerlvl.put(pname, rs.getInt("digger"));
+			farmerlvl.put(pname, rs.getInt("farmer"));
+			hunterlvl.put(pname, rs.getInt("hunter"));
+			minerlvl.put(pname, rs.getInt("miner"));
+			woodcutterlvl.put(pname, rs.getInt("woodcutter"));
 			rs.close();
 			s.close();
 			c.close();
@@ -141,12 +141,12 @@ public class UserManager {
 		tokens.remove(pname);
 		kills.remove(pname);
 		deaths.remove(pname);
-		digging.remove(pname);
-		building.remove(pname);
-		hunting.remove(pname);
-		farming.remove(pname);
-		mining.remove(pname);
-		woodcutting.remove(pname);
+		digger.remove(pname);
+		builder.remove(pname);
+		hunter.remove(pname);
+		farmer.remove(pname);
+		miner.remove(pname);
+		woodcutter.remove(pname);
 		archery.remove(pname);
 		axe.remove(pname);
 		hoe.remove(pname);
@@ -154,12 +154,12 @@ public class UserManager {
 		shovel.remove(pname);
 		sword.remove(pname);
 		unarmed.remove(pname);
-		digginglvl.remove(pname);
-		buildinglvl.remove(pname);
-		huntinglvl.remove(pname);
-		farminglvl.remove(pname);
-		mininglvl.remove(pname);
-		woodcuttinglvl.remove(pname);
+		diggerlvl.remove(pname);
+		builderlvl.remove(pname);
+		hunterlvl.remove(pname);
+		farmerlvl.remove(pname);
+		minerlvl.remove(pname);
+		woodcutterlvl.remove(pname);
 		archerylvl.remove(pname);
 		axelvl.remove(pname);
 		hoelvl.remove(pname);
@@ -177,13 +177,13 @@ public class UserManager {
 			s = c.createStatement();
 			String update = "UPDATE VSkills SET kills = " + kills.get(pname) + ", deaths = " + deaths.get(pname) + ", tokens = " + tokens.get(pname) + 
 					", money = " + money.get(pname) + ", rank = " + ranks.get(pname) + ", archery = " + archery.get(pname) + ", axe = " + axe.get(pname) + ", hoe = " + hoe.get(pname) + ", pickaxe = " +
-					pickaxe.get(pname) + ", shovel = " + shovel.get(pname) + ", sword = " + sword.get(pname) + ", unarmed = " + unarmed.get(pname) + ", building = " +
-					building.get(pname) + ", digging = " + digging.get(pname) + ", farming = " + farming.get(pname) + ", hunting = " + hunting.get(pname) + 
-					", mining = " + mining.get(pname) + ", woodcutting = " + woodcutting.get(pname) + " WHERE name = '" + pname + "'";
+					pickaxe.get(pname) + ", shovel = " + shovel.get(pname) + ", sword = " + sword.get(pname) + ", unarmed = " + unarmed.get(pname) + ", builder = " +
+					builder.get(pname) + ", digger = " + digger.get(pname) + ", farmer = " + farmer.get(pname) + ", hunter = " + hunter.get(pname) + 
+					", miner = " + miner.get(pname) + ", woodcutter = " + woodcutter.get(pname) + " WHERE name = '" + pname + "'";
 			String updatelvl = "UPDATE VSkills_levels SET archery = " + archerylvl.get(pname) + ", axe = " + axelvl.get(pname) + ", hoe = " + hoelvl.get(pname) + ", pickaxe = " +
-					pickaxelvl.get(pname) + ", shovel = " + shovellvl.get(pname) + ", sword = " + swordlvl.get(pname) + ", unarmed = " + unarmedlvl.get(pname) + ", building = " +
-					buildinglvl.get(pname) + ", digging = " + digginglvl.get(pname) + ", farming = " + farminglvl.get(pname) + ", hunting = " + huntinglvl.get(pname) + 
-					", mining = " + mininglvl.get(pname) + ", woodcutting = " + woodcuttinglvl.get(pname) + " WHERE name = '" + pname + "'";
+					pickaxelvl.get(pname) + ", shovel = " + shovellvl.get(pname) + ", sword = " + swordlvl.get(pname) + ", unarmed = " + unarmedlvl.get(pname) + ", builder = " +
+					builderlvl.get(pname) + ", digger = " + diggerlvl.get(pname) + ", farmer = " + farmerlvl.get(pname) + ", hunter = " + hunterlvl.get(pname) + 
+					", miner = " + minerlvl.get(pname) + ", woodcutter = " + woodcutterlvl.get(pname) + " WHERE name = '" + pname + "'";
 			s.executeUpdate(update);
 			s.close();
 			s = c.createStatement();
@@ -208,11 +208,11 @@ public class UserManager {
 			c = Main.sql.getConnection();
 			c.setAutoCommit(false);
 			s = c.createStatement();
-			s.addBatch("INSERT INTO VSkills (name, kills, deaths, tokens, money, rank, archery, axe, hoe, pickaxe, shovel, sword, unarmed, building" +
-					", digging, farming, hunting, mining, woodcutting) " +
+			s.addBatch("INSERT INTO VSkills (name, kills, deaths, tokens, money, rank, archery, axe, hoe, pickaxe, shovel, sword, unarmed, builder" +
+					", digger, farmer, hunter, miner, woodcutter) " +
 					"VALUES ('" + pname + "',0,0,0,0.25,1,0,0,0,0,0,0,0,0,0,0,0,0,0)");
-			s.addBatch("INSERT INTO VSkills_levels (name, archery, axe, hoe, pickaxe, shovel, sword, unarmed, building" +
-					", digging, farming, hunting, mining, woodcutting) " +
+			s.addBatch("INSERT INTO VSkills_levels (name, archery, axe, hoe, pickaxe, shovel, sword, unarmed, builder" +
+					", digger, farmer, hunter, miner, woodcutter) " +
 					"VALUES ('" + pname + "',1,1,1,1,1,1,1,1,1,1,1,1,1)");
 			s.executeBatch();
 			c.commit();
@@ -267,12 +267,12 @@ public class UserManager {
 	public int getJobXP(Player player, JobType job){
 		String pname = player.getName();
 		switch(job){
-			case BUILDING: return building.get(pname);
-			case DIGGING: return digging.get(pname);
-			case FARMING: return farming.get(pname);
-			case HUNTING: return hunting.get(pname);
-			case MINING: return mining.get(pname);
-			case WOODCUTTING: return woodcutting.get(pname);
+			case BUILDER: return builder.get(pname);
+			case DIGGER: return digger.get(pname);
+			case FARMER: return farmer.get(pname);
+			case HUNTER: return hunter.get(pname);
+			case MINER: return miner.get(pname);
+			case WOODCUTTER: return woodcutter.get(pname);
 			default: return 0;
 		}
 	}
@@ -294,12 +294,12 @@ public class UserManager {
 	public int getJobLvl(Player player, JobType job){
 		String pname = player.getName();
 		switch(job){
-			case BUILDING: return buildinglvl.get(pname);
-			case DIGGING: return digginglvl.get(pname);
-			case FARMING: return farminglvl.get(pname);
-			case HUNTING: return huntinglvl.get(pname);
-			case MINING: return mininglvl.get(pname);
-			case WOODCUTTING: return woodcuttinglvl.get(pname);
+			case BUILDER: return builderlvl.get(pname);
+			case DIGGER: return diggerlvl.get(pname);
+			case FARMER: return farmerlvl.get(pname);
+			case HUNTER: return hunterlvl.get(pname);
+			case MINER: return minerlvl.get(pname);
+			case WOODCUTTER: return woodcutterlvl.get(pname);
 			default: return 0;
 		}
 	}
@@ -346,23 +346,23 @@ public class UserManager {
 	public void setJobXP(Player player, JobType job, int xp){
 		String pname = player.getName();
 		switch(job){
-			case BUILDING: 
-				building.put(pname, xp);
+			case BUILDER: 
+				builder.put(pname, xp);
 				break;
-			case DIGGING: 
-				digging.put(pname, xp);
+			case DIGGER: 
+				digger.put(pname, xp);
 				break;
-			case FARMING: 
-				farming.put(pname, xp);
+			case FARMER: 
+				farmer.put(pname, xp);
 				break;
-			case HUNTING: 
-				hunting.put(pname, xp);
+			case HUNTER: 
+				hunter.put(pname, xp);
 				break;
-			case MINING: 
-				mining.put(pname, xp);
+			case MINER: 
+				miner.put(pname, xp);
 				break;
-			case WOODCUTTING: 
-				woodcutting.put(pname, xp);
+			case WOODCUTTER: 
+				woodcutter.put(pname, xp);
 				break;
 			default: break;
 		}
@@ -399,23 +399,23 @@ public class UserManager {
 	public void setJobLvl(Player player, JobType job, int xp){
 		String pname = player.getName();
 		switch(job){
-			case BUILDING: 
-				buildinglvl.put(pname, xp);
+			case BUILDER: 
+				builderlvl.put(pname, xp);
 				break;
-			case DIGGING: 
-				digginglvl.put(pname, xp);
+			case DIGGER: 
+				diggerlvl.put(pname, xp);
 				break;
-			case FARMING: 
-				farminglvl.put(pname, xp);
+			case FARMER: 
+				farmerlvl.put(pname, xp);
 				break;
-			case HUNTING: 
-				huntinglvl.put(pname, xp);
+			case HUNTER: 
+				hunterlvl.put(pname, xp);
 				break;
-			case MINING: 
-				mininglvl.put(pname, xp);
+			case MINER: 
+				minerlvl.put(pname, xp);
 				break;
-			case WOODCUTTING: 
-				woodcuttinglvl.put(pname, xp);
+			case WOODCUTTER: 
+				woodcutterlvl.put(pname, xp);
 				break;
 			default: break;
 		}
@@ -464,40 +464,40 @@ public class UserManager {
 		skillsexp.setDisplayName("Skills Exp to Level");
 		
 		Score build = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Building: "));
-		build.setScore(getJobLvl(player, JobType.BUILDING));
+		build.setScore(getJobLvl(player, JobType.BUILDER));
 		
 		Score dig = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Digging: "));
-		dig.setScore(getJobLvl(player, JobType.DIGGING));
+		dig.setScore(getJobLvl(player, JobType.DIGGER));
 		
 		Score farm = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Farming: "));
-		farm.setScore(getJobLvl(player, JobType.FARMING));
+		farm.setScore(getJobLvl(player, JobType.FARMER));
 		
 		Score hunt = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Hunting: "));
-		hunt.setScore(getJobLvl(player, JobType.HUNTING));
+		hunt.setScore(getJobLvl(player, JobType.HUNTER));
 		
 		Score mine = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Mining: "));
-		mine.setScore(getJobLvl(player, JobType.MINING));
+		mine.setScore(getJobLvl(player, JobType.MINER));
 		
 		Score wc = jobs.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Woodcutting: "));
-		wc.setScore(getJobLvl(player, JobType.WOODCUTTING));
+		wc.setScore(getJobLvl(player, JobType.WOODCUTTER));
 		
 		Score buildxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Building: "));
-		buildxp.setScore(getXPToLevel(player, JobType.BUILDING));
+		buildxp.setScore(getXPToLevel(player, JobType.BUILDER));
 		
 		Score digxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Digging: "));
-		digxp.setScore(getXPToLevel(player, JobType.DIGGING));
+		digxp.setScore(getXPToLevel(player, JobType.DIGGER));
 		
 		Score farmxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Farming: "));
-		farmxp.setScore(getXPToLevel(player, JobType.FARMING));
+		farmxp.setScore(getXPToLevel(player, JobType.FARMER));
 		
 		Score huntxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Hunting: "));
-		huntxp.setScore(getXPToLevel(player, JobType.HUNTING));
+		huntxp.setScore(getXPToLevel(player, JobType.HUNTER));
 		
 		Score minexp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Mining: "));
-		minexp.setScore(getXPToLevel(player, JobType.MINING));
+		minexp.setScore(getXPToLevel(player, JobType.MINER));
 		
 		Score wcxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Woodcutting: "));
-		wcxp.setScore(getXPToLevel(player, JobType.WOODCUTTING));
+		wcxp.setScore(getXPToLevel(player, JobType.WOODCUTTER));
 		
 		Score archery = skills.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Archery: "));
 		archery.setScore(getSkillLvl(player, SkillType.ARCHERY));
@@ -623,11 +623,11 @@ public class UserManager {
 			c = Main.sql.getConnection();
 			s = c.createStatement();
 			String update = "UPDATE VSkills SET kills = 0, deaths = 0, tokens = 0, money = 0, rank = 1, archery = 0, axe = 0," +
-					" hoe = 0, pickaxe = 0, shovel = 0, sword = 0, unarmed = 0, building = 0, digging = 0," +
-					" farming = 0, hunting = 0, mining = 0, woodcutting = 0 WHERE name = '" + pname + "'";
+					" hoe = 0, pickaxe = 0, shovel = 0, sword = 0, unarmed = 0, builder = 0, digger = 0," +
+					" farmer = 0, hunter = 0, miner = 0, woodcutter = 0 WHERE name = '" + pname + "'";
 			String updatelvl = "UPDATE VSkills_levels SET archery = 1, axe = 1, hoe = 1, pickaxe = 1," +
-					" shovel = 1, sword = 1, unarmed = 1, building = 1, digging = 1, farming = 1," +
-					" hunting = 1, mining = 1, woodcutting = 1 WHERE name = '" + pname + "'";
+					" shovel = 1, sword = 1, unarmed = 1, builder = 1, digger = 1, farmer = 1," +
+					" hunter = 1, miner = 1, woodcutter = 1 WHERE name = '" + pname + "'";
 			s.executeUpdate(update);
 			s.close();
 			s = c.createStatement();
@@ -646,12 +646,12 @@ public class UserManager {
 		tokens.put(pname, 0);
 		kills.put(pname, 0);
 		deaths.put(pname, 0);
-		digging.put(pname, 0);
-		building.put(pname, 0);
-		hunting.put(pname, 0);
-		farming.put(pname, 0);
-		mining.put(pname, 0);
-		woodcutting.put(pname, 0);
+		digger.put(pname, 0);
+		builder.put(pname, 0);
+		hunter.put(pname, 0);
+		farmer.put(pname, 0);
+		miner.put(pname, 0);
+		woodcutter.put(pname, 0);
 		archery.put(pname, 0);
 		axe.put(pname, 0);
 		hoe.put(pname, 0);
@@ -659,12 +659,12 @@ public class UserManager {
 		shovel.put(pname, 0);
 		sword.put(pname, 0);
 		unarmed.put(pname, 0);
-		digginglvl.put(pname, 1);
-		buildinglvl.put(pname, 1);
-		huntinglvl.put(pname, 1);
-		farminglvl.put(pname, 1);
-		mininglvl.put(pname, 1);
-		woodcuttinglvl.put(pname, 1);
+		diggerlvl.put(pname, 1);
+		builderlvl.put(pname, 1);
+		hunterlvl.put(pname, 1);
+		farmerlvl.put(pname, 1);
+		minerlvl.put(pname, 1);
+		woodcutterlvl.put(pname, 1);
 		archerylvl.put(pname, 1);
 		axelvl.put(pname, 1);
 		hoelvl.put(pname, 1);
