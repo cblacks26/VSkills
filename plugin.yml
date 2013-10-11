@@ -1,6 +1,6 @@
 name: VSkills
 main: com.github.vskills.Main
-version: 1.2
+version: 1.3
 author: cblacks26
 commands:
   VGod:
@@ -8,10 +8,10 @@ commands:
     usage: /VGod <player>
   VBoard:
     description: Toggles the types of scoreboards
-    usage: /VBoard [JL, SL, JXP, SXP, Stats]
-  VTokens:
-    description: Uses the players reward tokens
-    usage: /VTokens [money]
+    usage: /VBoard [JL, SL, JXP, SXP, Stats, Power]
+  VPower:
+    description: Changes the players current power and max power
+    usage: /VPower [refresh, set] <player> <power>
   VReset:
     description: Resets all of the players data
     usage: /VReset <player>
@@ -27,4 +27,7 @@ commands:
   VStats:
     description: Shows different leaderboards
     usage: /VStats [options]
+  VTokens:
+    description: Uses the players reward tokens
+    usage: /VTokens [money]
 depend: [Vault]

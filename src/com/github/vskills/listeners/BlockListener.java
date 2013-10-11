@@ -8,20 +8,24 @@ import java.sql.Statement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.vskills.Main;
+import com.github.vskills.datatypes.AbilityType;
 import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
 import com.github.vskills.events.JobXPGainEvent;
 import com.github.vskills.events.SkillXPGainEvent;
+import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.BlockUtil;
 import com.github.vskills.util.ItemUtil;
 
@@ -110,10 +114,49 @@ public class BlockListener implements Listener{
 			return;
 		}
 	}
+	
+	@EventHandler
+	public void onBlockDamage(BlockDamageEvent event){
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
+		Material b = block.getType();
+		ItemStack item = player.getItemInHand();
+		if(blockUtil.isMinable(b)){
+			if(itemUtil.isPick(item)){
+				if(AbilitiesManager.isToggled(player, AbilityType.INSTAMINE)){
+					int xp = blockUtil.getBlockDestroyXP(b);
+					event.setCancelled(true);
+					AbilitiesManager.runInstaMine(player, block, xp);
+				}
+			}
+		}else if(blockUtil.isDigable(b)){
+			if(itemUtil.isShovel(item)){
+				if(AbilitiesManager.isToggled(player, AbilityType.INSTADIG)){
+					int xp = blockUtil.getBlockDestroyXP(b);
+					event.setCancelled(true);
+					AbilitiesManager.runInstaDig(player, block, xp);
+				}
+			}
+		}else if(blockUtil.isCuttable(b)){
+			if(itemUtil.isAxe(item)){
+				if(AbilitiesManager.isToggled(player, AbilityType.INSTACUT)){
+					int xp = blockUtil.getBlockDestroyXP(b);
+					event.setCancelled(true);
+					AbilitiesManager.runInstaCut(player, block, xp);
+				}
+			}
+		}
+		
+	}
 
 	@EventHandler
 	public void SignCreate(SignChangeEvent event){
+		Player player = event.getPlayer();
 		if(event.getLine(0).equalsIgnoreCase("[VRank]")){
+			if(Main.isAuthorized(player, "VSkills.signs.rank")){
+				player.sendMessage(ChatColor.RED + "You don't have the permissions to use this type of sign");
+				return;
+			}
 			String[] line = event.getLines();
 			if(Main.isInteger(line[1])){
 				if(Integer.parseInt(line[1]) > 0){
@@ -135,26 +178,26 @@ public class BlockListener implements Listener{
 			rs = s.executeQuery("SELECT * FROM VSkills ORDER BY rank DESC");
 			if(rank == 1){
 				if(rs.next()){
-					event.setLine(1, rs.getString("name") + ": " + rs.getInt("rank"));
+					event.setLine(1, rank + ". " + rs.getString("name") + ": " + rs.getInt("rank"));
 				}
 				if(rs.next()){
-					event.setLine(2, rs.getString("name") + ": " + rs.getInt("rank"));
+					event.setLine(2, rank2 + ". " + rs.getString("name") + ": " + rs.getInt("rank"));
 				}
 				if(rs.next()){
-					event.setLine(3, rs.getString("name") + ": " + rs.getInt("rank"));
+					event.setLine(3, rank3 + ". " + rs.getString("name") + ": " + rs.getInt("rank"));
 				}
 			}else{
 				rs.absolute(rank - 1);
 				if(rs.next()){
-					event.setLine(1, rs.getString("name") + ": " + rs.getInt("rank"));
+					event.setLine(1, rank + ". " + rs.getString("name") + ": " + rs.getInt("rank"));
 				}
 				rs.absolute(rank2);
 				if(rs.next()){
-					event.setLine(2, rs.getString("name") + ": " + rs.getInt("rank"));
+					event.setLine(2, rank2 + ". " + rs.getString("name") + ": " + rs.getInt("rank"));
 				}
 				rs.absolute(rank3);
 				if(rs.next()){
-					event.setLine(3, rs.getString("name") + ": " + rs.getInt("rank"));
+					event.setLine(3, rank3 + ". " + rs.getString("name") + ": " + rs.getInt("rank"));
 				}
 			}
 			rs.close();

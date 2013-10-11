@@ -33,7 +33,7 @@ public class CommandGod implements CommandExecutor{
 					}
 				}else if(args.length == 1){
 					Player tplayer = Bukkit.getPlayer(args[0]);
-					if(Main.isAuthorized(player, "vskills.god.others") == false){
+					if(Main.isAuthorized(player, "VSkills.god.others") == false){
 						player.sendMessage(ChatColor.RED + "You don't have the Permissions for this command");
 						return true;
 					}

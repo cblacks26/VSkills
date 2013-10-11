@@ -14,4 +14,11 @@ public class DamageUtil {
 		double dm = damage + (lvl * .05);
 		return dm;
 	}
+	
+	public double getFallDamage(Player player, Double damage){
+		int lvl = userManager.getSkillLvl(player, SkillType.ACROBATICS);
+		double dm = damage - (lvl * .10);
+		return dm;
+	}
+	
 }

@@ -7,6 +7,7 @@ public enum Commands {
 	VBOARD("VBoard", "VSkills.board", Bukkit.getPluginCommand("VBoard").getDescription(), Bukkit.getPluginCommand("VBoard").getUsage()),
 	VGOD("VGod", "VSkills.god", Bukkit.getPluginCommand("VGod").getDescription(), Bukkit.getPluginCommand("VGod").getUsage()),
 	VRESET("VReset", "VSkills.reset", Bukkit.getPluginCommand("VReset").getDescription(), Bukkit.getPluginCommand("VReset").getUsage()),
+	VPOWER("VPower", "VSkills.power", Bukkit.getPluginCommand("VPower").getDescription(), Bukkit.getPluginCommand("VPower").getUsage()),
 	VSAVE("VSave", "VSkills.save", Bukkit.getPluginCommand("VSave").getDescription(), Bukkit.getPluginCommand("VSave").getUsage()),
 	VSET("VSet", "VSkills.set", Bukkit.getPluginCommand("VSet").getDescription(), Bukkit.getPluginCommand("VSet").getUsage()),
 	VSKILLS("VSkills", "VSkills.help", Bukkit.getPluginCommand("VSkills").getDescription(), Bukkit.getPluginCommand("VSkills").getUsage()),

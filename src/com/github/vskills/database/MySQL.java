@@ -75,15 +75,17 @@ public class MySQL extends Database{
         	c = getConnection();
         	c.setAutoCommit(false);
 			s = c.createStatement();
-			String table1 = "CREATE TABLE IF NOT EXISTS VSkills (name VARCHAR(50), kills Integer, deaths Integer," +
-					" tokens Integer, money Double, rank Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
+			String extra = "CREATE TABLE IF NOT EXISTS VSkills (name VARCHAR(50), kills Integer, deaths Integer," +
+					" tokens Integer, money Double, rank Integer, power Integer, cpower Integer)";
+			String xp = "CREATE TABLE IF NOT EXISTS VSkills_xp (name VARCHAR(50), acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
 					" shovel Integer, sword Integer, unarmed Integer, builder Integer, digger Integer, farmer Integer," +
 					" hunter Integer, miner Integer, woodcutter Integer)";
-			String table2 = "CREATE TABLE IF NOT EXISTS VSkills_levels (name VARCHAR(50), archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
+			String level = "CREATE TABLE IF NOT EXISTS VSkills_levels (name VARCHAR(50), acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
 					" shovel Integer, sword Integer, unarmed Integer, builder Integer, digger Integer, farmer Integer," +
 					" hunter Integer, miner Integer, woodcutter Integer)";
-			s.addBatch(table1);
-			s.addBatch(table2);
+			s.addBatch(extra);
+			s.addBatch(xp);
+			s.addBatch(level);
 			s.executeBatch();
 			c.commit();
 			s.close();

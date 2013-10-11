@@ -2,15 +2,13 @@ package com.github.vskills;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.vskills.commands.CommandBoard;
 import com.github.vskills.commands.CommandGod;
 import com.github.vskills.commands.CommandHelp;
+import com.github.vskills.commands.CommandPower;
 import com.github.vskills.commands.CommandReset;
 import com.github.vskills.commands.CommandSave;
 import com.github.vskills.commands.CommandSet;
@@ -34,12 +33,12 @@ import com.github.vskills.listeners.EntityListener;
 import com.github.vskills.listeners.PlayerListener;
 import com.github.vskills.listeners.VSkillsListener;
 import com.github.vskills.runnables.UserSaveTask;
+import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.UserManager;
 
 public class Main extends JavaPlugin{
 	
 	private final static Logger log = Logger.getLogger("Minecraft");
-	private ScheduledExecutorService scheduler;
 	private static Economy eco = null;
 	private static Permission perms = null;
 	private static Chat chat = null;
@@ -68,6 +67,7 @@ public class Main extends JavaPlugin{
 		scheduledTasks();
 		saveDefaultConfig();
 		sql.createTables();
+		AbilitiesManager.addUsers();
     	userManager.addUsers();
     	userManager.getScoreboards();
 	}
@@ -83,12 +83,13 @@ public class Main extends JavaPlugin{
 	private void getCommands(){
 		this.getCommand("VGod").setExecutor(new CommandGod());
 		this.getCommand("VBoard").setExecutor(new CommandBoard());
+		this.getCommand("VPower").setExecutor(new CommandPower());
 		this.getCommand("VReset").setExecutor(new CommandReset());
-		this.getCommand("VTokens").setExecutor(new CommandTokens());
 		this.getCommand("VSkills").setExecutor(new CommandHelp());
 		this.getCommand("VSet").setExecutor(new CommandSet());
 		this.getCommand("VSave").setExecutor(new CommandSave());
 		this.getCommand("VStats").setExecutor(new CommandStats());
+		this.getCommand("VTokens").setExecutor(new CommandTokens());
 	}
 	
 	public Database getMySQL(){
@@ -224,7 +225,9 @@ public class Main extends JavaPlugin{
 	}
 	
 	public static SkillType matchSkill(String s){
-		if(s.equalsIgnoreCase("Archery")){
+		if(s.equalsIgnoreCase("Acrobatics") || s.equalsIgnoreCase("Acrobat")){
+			return SkillType.ACROBATICS;
+		}else if(s.equalsIgnoreCase("Archery")){
 			return SkillType.ARCHERY;
 		}else if(s.equalsIgnoreCase("Axe") || s.equalsIgnoreCase("Axes")){
 			return SkillType.AXE;
@@ -244,8 +247,21 @@ public class Main extends JavaPlugin{
 	}
 
 	private void scheduledTasks(){
-		scheduler = Executors.newScheduledThreadPool(1);
-		 scheduler.scheduleAtFixedRate(userSave, 10, 10, TimeUnit.MINUTES);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, userSave, 10000L, 10000L);
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable()
+	    {
+			public void run(){
+				for (Player p : Main.this.getServer().getOnlinePlayers()){
+					int cpower = AbilitiesManager.getPlayerCurrentPower(p);
+					int power = AbilitiesManager.getPlayerMaxPower(p);
+					if (cpower < power){
+						AbilitiesManager.addPlayerCurrentPower(p, 1);
+						userManager.scoreboard(p);
+					}
+	          	}
+			}
+	    }
+	    , 40L, 40L);
 	}
 
 }

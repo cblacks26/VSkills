@@ -1,5 +1,6 @@
 package com.github.vskills.util;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemUtil {
@@ -8,6 +9,14 @@ public class ItemUtil {
 		switch(item.getType()){
 			case GOLD_AXE: case DIAMOND_AXE: case IRON_AXE: case WOOD_AXE: case STONE_AXE: return true;
 			default: return false;
+		}
+	}
+	
+	public boolean isBow(ItemStack item){
+		if(item.getType().equals(Material.BOW)){
+			return true;
+		}else{
+			return false;
 		}
 	}
 	

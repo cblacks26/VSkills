@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.vskills.Main;
+import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.UserManager;
 
 public class CommandTokens implements CommandExecutor{
@@ -37,6 +38,10 @@ public class CommandTokens implements CommandExecutor{
 								double money = userManager.getMoney(player);
 								double newmoney = money + 0.01;
 								userManager.setMoney(player, newmoney);
+								userManager.setTokens(player, tokens - 1);
+								userManager.scoreboard(player);
+							}if(args[0].equalsIgnoreCase("power")){
+								AbilitiesManager.addPlayerMaxPower(player, 2);
 								userManager.setTokens(player, tokens - 1);
 								userManager.scoreboard(player);
 							}

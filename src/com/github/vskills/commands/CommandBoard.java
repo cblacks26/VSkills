@@ -25,6 +25,7 @@ public class CommandBoard implements CommandExecutor{
 						else if(args[0].equalsIgnoreCase("Stats")) userManager.setScoreboard(player, "stats");
 						else if(args[0].equalsIgnoreCase("SkillsXP") || args[0].equalsIgnoreCase("SXP")) userManager.setScoreboard(player, "skillsexp");
 						else if(args[0].equalsIgnoreCase("JobsXP") || args[0].equalsIgnoreCase("JXP")) userManager.setScoreboard(player, "jobsexp");
+						else if(args[0].equalsIgnoreCase("Power") || args[0].equalsIgnoreCase("Powers")) userManager.setScoreboard(player, "power");
 						else {
 							player.sendMessage("VBoard Options: JL, SL, JXP, SXP, Stats");
 						}

@@ -78,7 +78,7 @@ public class BlockUtil {
 	public boolean isFarmerPlaceable(Material block){
 		switch(block){
 			case DIRT: case GRASS: case SEEDS: case PUMPKIN_SEEDS: case MELON_SEEDS: case CACTUS: case CARROT:
-			case POTATO: case SUGAR_CANE: return true;
+			case POTATO: case SUGAR_CANE: case CROPS: return true;
 			default: return false;
 		}
 	}
@@ -86,8 +86,15 @@ public class BlockUtil {
 	public int getFarmerPlaceXP(Material block){
 		switch(block){
 			case SEEDS: case PUMPKIN_SEEDS: case MELON_SEEDS: case CACTUS: case CARROT: case POTATO: 
-			case SUGAR_CANE: return 2;
+			case SUGAR_CANE: case CROPS: return 2;
 			default: return 1;
+		}
+	}
+	
+	public boolean isInstaGrowable(Material block){
+		switch(block){
+			case CROPS: case PUMPKIN_STEM: case MELON_STEM: case CACTUS: case SUGAR_CANE_BLOCK: return true;
+			default: return false;
 		}
 	}
 
@@ -109,7 +116,8 @@ public class BlockUtil {
 
 	public boolean isPlaceable(Material block){
 		switch(block){
-			case DIRT: case SOIL: case GRASS: case BOAT: case MINECART: case FIREWORK: return false;
+			case SOIL: case BOAT: case MINECART: case FIREWORK: case DIRT: case GRASS: case SEEDS: case PUMPKIN_SEEDS: return false;
+			case MELON_SEEDS: case CACTUS: case CARROT: case POTATO: case SUGAR_CANE: case CROPS: return false;
 			default: return true;
 		}
 	}

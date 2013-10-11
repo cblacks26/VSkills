@@ -39,6 +39,7 @@ public class UserManager {
 	private final HashMap<String, Integer> builder = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> woodcutter = new HashMap<String, Integer>();
 	
+	private final HashMap<String, Integer> acrobat = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> archery = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> axe = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> hoe = new HashMap<String, Integer>();
@@ -54,6 +55,7 @@ public class UserManager {
 	private final HashMap<String, Integer> builderlvl = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> woodcutterlvl = new HashMap<String, Integer>();
 	
+	private final HashMap<String, Integer> acrobatlvl = new HashMap<String, Integer> ();
 	private final HashMap<String, Integer> archerylvl = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> axelvl = new HashMap<String, Integer>();
 	private final HashMap<String, Integer> hoelvl = new HashMap<String, Integer>();
@@ -67,6 +69,8 @@ public class UserManager {
     public Scoreboard statsboard;
     public Scoreboard jobexpboard;
     public Scoreboard skillexpboard;
+    public Scoreboard powerboard;
+    private Objective powers;
     private Objective skills;
 	private Objective jobs;
 	private Objective stats;
@@ -87,6 +91,12 @@ public class UserManager {
 			deaths.put(pname, rs.getInt("deaths"));
 			tokens.put(pname, rs.getInt("tokens"));
 			ranks.put(pname, rs.getInt("rank"));
+			rs.close();
+			s.close();
+			s = c.createStatement();
+			rs = s.executeQuery("SELECT * FROM VSkills_xp WHERE name = '" + pname + "'");
+			rs.next();
+			acrobat.put(pname, rs.getInt("acrobat")); 
 			archery.put(pname, rs.getInt("archery"));
 			axe.put(pname, rs.getInt("axe"));
 			hoe.put(pname, rs.getInt("hoe"));
@@ -105,6 +115,7 @@ public class UserManager {
 			s = c.createStatement();
 			rs = s.executeQuery("SELECT * FROM VSkills_levels WHERE name = '" + pname + "'");
 			rs.next();
+			acrobatlvl.put(pname, rs.getInt("acrobat"));
 			archerylvl.put(pname, rs.getInt("archery"));
 			axelvl.put(pname, rs.getInt("axe"));
 			hoelvl.put(pname, rs.getInt("hoe"));
@@ -121,7 +132,6 @@ public class UserManager {
 			rs.close();
 			s.close();
 			c.close();
-			Main.writeMessage("Loaded player: " + pname);
 		}catch(SQLException e){
 			Main.writeError("Error Loading User Data: " + e.getMessage());
 		}
@@ -147,6 +157,7 @@ public class UserManager {
 		farmer.remove(pname);
 		miner.remove(pname);
 		woodcutter.remove(pname);
+		acrobat.remove(pname);
 		archery.remove(pname);
 		axe.remove(pname);
 		hoe.remove(pname);
@@ -160,6 +171,7 @@ public class UserManager {
 		farmerlvl.remove(pname);
 		minerlvl.remove(pname);
 		woodcutterlvl.remove(pname);
+		acrobatlvl.remove(pname);
 		archerylvl.remove(pname);
 		axelvl.remove(pname);
 		hoelvl.remove(pname);
@@ -171,23 +183,29 @@ public class UserManager {
 	
 	public void saveUser(Player player){
 		String pname = player.getName();
+		int power = AbilitiesManager.getPlayerMaxPower(player);
+		int cpower = AbilitiesManager.getPlayerCurrentPower(player);
 		try{
 			Main.sql.open();
 			c = Main.sql.getConnection();
+			c.setAutoCommit(false);
 			s = c.createStatement();
 			String update = "UPDATE VSkills SET kills = " + kills.get(pname) + ", deaths = " + deaths.get(pname) + ", tokens = " + tokens.get(pname) + 
-					", money = " + money.get(pname) + ", rank = " + ranks.get(pname) + ", archery = " + archery.get(pname) + ", axe = " + axe.get(pname) + ", hoe = " + hoe.get(pname) + ", pickaxe = " +
+					", money = " + money.get(pname) + ", rank = " + ranks.get(pname) + ", power = " + power + ", cpower = " + cpower + " WHERE name " + 
+					"= '" + pname + "'"; 					
+			String updatexp = "UPDATE VSkills_xp SET acrobat = " + acrobat.get(pname) + ", archery = " + archery.get(pname) + ", axe = " + axe.get(pname) + ", hoe = " + hoe.get(pname) + ", pickaxe = " +
 					pickaxe.get(pname) + ", shovel = " + shovel.get(pname) + ", sword = " + sword.get(pname) + ", unarmed = " + unarmed.get(pname) + ", builder = " +
 					builder.get(pname) + ", digger = " + digger.get(pname) + ", farmer = " + farmer.get(pname) + ", hunter = " + hunter.get(pname) + 
 					", miner = " + miner.get(pname) + ", woodcutter = " + woodcutter.get(pname) + " WHERE name = '" + pname + "'";
-			String updatelvl = "UPDATE VSkills_levels SET archery = " + archerylvl.get(pname) + ", axe = " + axelvl.get(pname) + ", hoe = " + hoelvl.get(pname) + ", pickaxe = " +
+			String updatelvl = "UPDATE VSkills_levels SET acrobat = " + acrobatlvl.get(pname) + ", archery = " + archerylvl.get(pname) + ", axe = " + axelvl.get(pname) + ", hoe = " + hoelvl.get(pname) + ", pickaxe = " +
 					pickaxelvl.get(pname) + ", shovel = " + shovellvl.get(pname) + ", sword = " + swordlvl.get(pname) + ", unarmed = " + unarmedlvl.get(pname) + ", builder = " +
 					builderlvl.get(pname) + ", digger = " + diggerlvl.get(pname) + ", farmer = " + farmerlvl.get(pname) + ", hunter = " + hunterlvl.get(pname) + 
 					", miner = " + minerlvl.get(pname) + ", woodcutter = " + woodcutterlvl.get(pname) + " WHERE name = '" + pname + "'";
-			s.executeUpdate(update);
-			s.close();
-			s = c.createStatement();
-			s.executeUpdate(updatelvl);
+			s.addBatch(update);
+			s.addBatch(updatexp);
+			s.addBatch(updatelvl);
+			s.executeBatch();
+			c.commit();
 			s.close();
 			c.close();
 		}catch(SQLException e){
@@ -208,12 +226,13 @@ public class UserManager {
 			c = Main.sql.getConnection();
 			c.setAutoCommit(false);
 			s = c.createStatement();
-			s.addBatch("INSERT INTO VSkills (name, kills, deaths, tokens, money, rank, archery, axe, hoe, pickaxe, shovel, sword, unarmed, builder" +
+			s.addBatch("INSERT INTO VSkills (name, kills, deaths, tokens, money, rank, power, cpower) "
+					+ "VALUES ('" + pname + "',0,0,0,0.25,1,80,80)");
+			s.addBatch("INSERT INTO VSkills_xp (name, acrobat, archery, axe, hoe, pickaxe, shovel, sword, unarmed, builder, digger, farmer, hunter, miner, "
+					+ "woodcutter) VALUES ('" + pname + "',0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
+			s.addBatch("INSERT INTO VSkills_levels (name, acrobat, archery, axe, hoe, pickaxe, shovel, sword, unarmed, builder" +
 					", digger, farmer, hunter, miner, woodcutter) " +
-					"VALUES ('" + pname + "',0,0,0,0.25,1,0,0,0,0,0,0,0,0,0,0,0,0,0)");
-			s.addBatch("INSERT INTO VSkills_levels (name, archery, axe, hoe, pickaxe, shovel, sword, unarmed, builder" +
-					", digger, farmer, hunter, miner, woodcutter) " +
-					"VALUES ('" + pname + "',1,1,1,1,1,1,1,1,1,1,1,1,1)");
+					"VALUES ('" + pname + "',1,1,1,1,1,1,1,1,1,1,1,1,1,1)");
 			s.executeBatch();
 			c.commit();
 			s.close();
@@ -253,6 +272,7 @@ public class UserManager {
 	public int getSkillXP(Player player, SkillType skill){
 		String pname = player.getName();
 		switch(skill){
+			case ACROBATICS: return acrobat.get(pname);
 			case ARCHERY: return archery.get(pname);
 			case AXE: return axe.get(pname);
 			case HOE: return hoe.get(pname);
@@ -280,6 +300,7 @@ public class UserManager {
 	public int getSkillLvl(Player player, SkillType skill){
 		String pname = player.getName();
 		switch(skill){
+			case ACROBATICS: return acrobatlvl.get(pname);
 			case ARCHERY: return archerylvl.get(pname);
 			case AXE: return axelvl.get(pname);
 			case HOE: return hoelvl.get(pname);
@@ -318,6 +339,9 @@ public class UserManager {
 	public void setSkillXP(Player player, SkillType skill, int xp){
 		String pname = player.getName();
 		switch(skill){
+			case ACROBATICS: 
+				acrobat.put(pname, xp);
+				break;
 			case ARCHERY: 
 				archery.put(pname, xp);
 				break;
@@ -371,6 +395,9 @@ public class UserManager {
 	public void setSkillLvl(Player player, SkillType skill, int xp){
 		String pname = player.getName();
 		switch(skill){
+			case ACROBATICS: 
+				acrobatlvl.put(pname, xp);
+				break;
 			case ARCHERY: 
 				archerylvl.put(pname, xp);
 				break;
@@ -450,6 +477,10 @@ public class UserManager {
 		skills = skillsboard.registerNewObjective("Skills", "dummy");
 		skills.setDisplaySlot(DisplaySlot.SIDEBAR);
 		skills.setDisplayName("Skill Levels");
+		powerboard = Bukkit.getScoreboardManager().getNewScoreboard();
+		powers = powerboard.registerNewObjective("Power", "dummy");
+		powers.setDisplaySlot(DisplaySlot.SIDEBAR);
+		powers.setDisplayName("Power");
 		statsboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		stats = statsboard.registerNewObjective("Kills", "dummy");
 		stats.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -499,6 +530,9 @@ public class UserManager {
 		Score wcxp = jobsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Woodcutting: "));
 		wcxp.setScore(getXPToLevel(player, JobType.WOODCUTTER));
 		
+		Score acrobats = skills.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Acrobatics: "));
+		acrobats.setScore(getSkillLvl(player, SkillType.ACROBATICS));
+		
 		Score archery = skills.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Archery: "));
 		archery.setScore(getSkillLvl(player, SkillType.ARCHERY));
 		
@@ -519,6 +553,9 @@ public class UserManager {
 		
 		Score unarmed = skills.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Unarmed: "));
 		unarmed.setScore(getSkillLvl(player, SkillType.UNARMED));
+		
+		Score acrobatxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Acrobatics: "));
+		acrobatxp.setScore(getXPToLevel(player, SkillType.ACROBATICS));
 		
 		Score archeryxp = skillsexp.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Archery: "));
 		archeryxp.setScore(getXPToLevel(player, SkillType.ARCHERY));
@@ -556,6 +593,12 @@ public class UserManager {
 		Score token = stats.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Tokens: "));
 		token.setScore(getTokens(player));
 		
+		Score p = powers.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "MaxPower: "));
+		p.setScore(AbilitiesManager.getPlayerMaxPower(player));
+		
+		Score cp = powers.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "CurrentPower: "));
+		cp.setScore(AbilitiesManager.getPlayerCurrentPower(player));
+		
 		if(sb.get(pname) == "jobs"){
 			player.setScoreboard(jobsboard);
 		}else if(sb.get(pname) == "skills"){
@@ -566,6 +609,8 @@ public class UserManager {
 			player.setScoreboard(jobexpboard);
 		}else if(sb.get(pname) == "skillsexp"){
 			player.setScoreboard(skillexpboard);
+		}else if(sb.get(pname) == "power"){
+			player.setScoreboard(powerboard);
 		}else{
 			return;
 		}
@@ -588,6 +633,9 @@ public class UserManager {
 		}else if(type == "skillsexp"){
 			sb.put(pname, "skillsexp");
 			player.setScoreboard(skillexpboard);
+		}else if(type == "power"){
+			sb.put(pname, "power");
+			player.setScoreboard(powerboard);
 		}else{
 			return;
 		}
@@ -622,10 +670,10 @@ public class UserManager {
 			Main.sql.open();
 			c = Main.sql.getConnection();
 			s = c.createStatement();
-			String update = "UPDATE VSkills SET kills = 0, deaths = 0, tokens = 0, money = 0, rank = 1, archery = 0, axe = 0," +
+			String update = "UPDATE VSkills SET kills = 0, deaths = 0, tokens = 0, money = 0, rank = 1, acrobat = 0, archery = 0, axe = 0," +
 					" hoe = 0, pickaxe = 0, shovel = 0, sword = 0, unarmed = 0, builder = 0, digger = 0," +
 					" farmer = 0, hunter = 0, miner = 0, woodcutter = 0 WHERE name = '" + pname + "'";
-			String updatelvl = "UPDATE VSkills_levels SET archery = 1, axe = 1, hoe = 1, pickaxe = 1," +
+			String updatelvl = "UPDATE VSkills_levels SET acrobat = 1, archery = 1, axe = 1, hoe = 1, pickaxe = 1," +
 					" shovel = 1, sword = 1, unarmed = 1, builder = 1, digger = 1, farmer = 1," +
 					" hunter = 1, miner = 1, woodcutter = 1 WHERE name = '" + pname + "'";
 			s.executeUpdate(update);
@@ -652,6 +700,7 @@ public class UserManager {
 		farmer.put(pname, 0);
 		miner.put(pname, 0);
 		woodcutter.put(pname, 0);
+		acrobat.put(pname, 0);
 		archery.put(pname, 0);
 		axe.put(pname, 0);
 		hoe.put(pname, 0);
@@ -665,6 +714,7 @@ public class UserManager {
 		farmerlvl.put(pname, 1);
 		minerlvl.put(pname, 1);
 		woodcutterlvl.put(pname, 1);
+		acrobatlvl.put(pname, 0);
 		archerylvl.put(pname, 1);
 		axelvl.put(pname, 1);
 		hoelvl.put(pname, 1);

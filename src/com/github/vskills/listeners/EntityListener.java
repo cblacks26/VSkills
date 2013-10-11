@@ -9,22 +9,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
+import com.github.vskills.Main;
 import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
 import com.github.vskills.events.JobXPGainEvent;
 import com.github.vskills.events.SkillXPGainEvent;
-import com.github.vskills.util.DamageUtil;
+import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.EntityUtil;
 import com.github.vskills.util.ItemUtil;
+import com.github.vskills.util.UserManager;
 
 public class EntityListener implements Listener{
 
 	ItemUtil itemUtil = new ItemUtil();
 	EntityUtil entityUtil = new EntityUtil();
-	DamageUtil damageUtil = new DamageUtil();
+	UserManager userManager = Main.getUserManager();
 	
 	@EventHandler
 	public void onEntityDeathEvent(EntityDeathEvent event){
@@ -75,25 +78,31 @@ public class EntityListener implements Listener{
 	}
 	
 	@EventHandler
-	public void onEntityDamageEvent(EntityDamageEvent event){
-		if(event.getEntity().getLastDamageCause() instanceof Player){
-			Player player = (Player) event.getEntity().getLastDamageCause();
-			ItemStack item = player.getItemInHand();
-			if(itemUtil.isAxe(item)){
-				double d = event.getDamage();
-				double dam = damageUtil.getDamage(player, SkillType.AXE, d);
-				event.setDamage(dam);
-			}else if(itemUtil.isSword(item)){
-				double d = event.getDamage();
-				double dam = damageUtil.getDamage(player, SkillType.SWORD, d);
-				event.setDamage(dam);
-			}else if(itemUtil.isPick(item)){
-				double d = event.getDamage();
-				double dam = damageUtil.getDamage(player, SkillType.PICKAXE, d);
-				event.setDamage(dam);
-			}else{
-				return;
+	public void EntityDamagebyPlayer(EntityDamageByEntityEvent event){
+		if(event.getDamager() instanceof Player){
+			Player player = (Player)event.getDamager();
+			double damage = event.getDamage();
+			if(itemUtil.isUnarmed(player.getItemInHand())){
+				double dmg = AbilitiesManager.runPowerPunch(player, damage);
+				event.setDamage(dmg);
+				userManager.scoreboard(player);
+			}else if(itemUtil.isSword(player.getItemInHand())){
+				double dmg = AbilitiesManager.runPowerSword(player, damage);
+				event.setDamage(dmg);
+				userManager.scoreboard(player);
 			}
 		}
 	}
+	
+	@EventHandler
+	public void ArrowShot(EntityShootBowEvent event){
+		if ((!(event.getEntity() instanceof Player)) || (!(event.getProjectile() instanceof Arrow))) {
+		      return;
+		    }
+
+		Player player = (Player)event.getEntity();
+		Arrow arrow = (Arrow)event.getProjectile();
+		AbilitiesManager.runBlazingArrows(player, arrow);
+	}
+	
 }

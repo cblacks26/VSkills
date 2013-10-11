@@ -2,6 +2,7 @@ package com.github.vskills.datatypes;
 
 public enum SkillType {
 
+	ACROBATICS("Acrobatics"),
 	ARCHERY("Archery"),
 	AXE("Axe"),
 	HOE("Hoe"),

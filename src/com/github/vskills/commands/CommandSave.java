@@ -23,14 +23,18 @@ public class CommandSave implements CommandExecutor{
 					return true;
 				}else{
 					if(args.length == 0){
+						player.sendMessage("Saving Users...");
 						userManager.saveUsers();
+						player.sendMessage("Save Completed");
 					}else{
 						player.sendMessage("Usage: " + Commands.VSAVE.getUsage());
 					}
 				}
 			}else{
 				if(args.length == 0){
+					sender.sendMessage("Saving Users...");
 					userManager.saveUsers();
+					sender.sendMessage("Save Completed");
 				}else{
 					sender.sendMessage("Usage: " + Commands.VSAVE.getUsage());
 				}
