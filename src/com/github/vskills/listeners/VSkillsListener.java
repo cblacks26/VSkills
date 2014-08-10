@@ -61,6 +61,7 @@ public class VSkillsListener implements Listener{
 		User user = userManager.getUser(event.getUserID());
 		SkillType skill = event.getSkillType();
 		user.addXp(skill, event.getXPGained());
+		Main.depositPlayer(Bukkit.getPlayer(event.getUserID()), 0.25 * event.getXPGained());
 		rank.userLevelUp(event.getUserID(), skill);
 		user.scoreboard();
 	}
