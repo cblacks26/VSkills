@@ -1,6 +1,7 @@
 package com.github.vskills.events;
 
-import org.bukkit.entity.Player;
+import java.util.UUID;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -9,18 +10,18 @@ import com.github.vskills.datatypes.SkillType;
 public class SkillLevelUpEvent extends Event{
 
 	private static final HandlerList handlers = new HandlerList();
-    private Player player;
+    private UUID id;
     private SkillType skill;
     private int level;
     
-    public SkillLevelUpEvent(Player player, SkillType skill, int level) {
-        this.player = player;
+    public SkillLevelUpEvent(UUID id, SkillType skill, int level) {
+        this.id = id;
         this.skill = skill;
         this.level = level;
     }
 
-	public Player getPlayer() {
-        return player;
+	public UUID getUserID() {
+        return id;
     }
     
 	public SkillType getSkillType(){
@@ -38,7 +39,4 @@ public class SkillLevelUpEvent extends Event{
     public static HandlerList getHandlerList() {
         return handlers;
     }
-
-	
-	
 }

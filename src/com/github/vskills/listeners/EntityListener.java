@@ -1,5 +1,7 @@
 package com.github.vskills.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
@@ -14,9 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.vskills.Main;
-import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
-import com.github.vskills.events.JobXPGainEvent;
 import com.github.vskills.events.SkillXPGainEvent;
 import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.EntityUtil;
@@ -41,34 +41,31 @@ public class EntityListener implements Listener{
                 if(a.getShooter() instanceof Player){
                 	Player player = (Player) a.getShooter();
                     int xp = entityUtil.getEntityXP(entity);
-                    JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.HUNTER, xp);
-                    pm.callEvent(jobevent);
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.ARCHERY, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player.getUniqueId(), SkillType.ARCHERY, xp);
                     pm.callEvent(skillevent);
                 }
             }else if(entityevent.getDamager() instanceof Player){
             	Player player = (Player) entityevent.getDamager();
+            	UUID id = player.getUniqueId();
             	ItemStack item = player.getItemInHand();
             	int xp = entityUtil.getEntityXP(entity);
-            	JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.HUNTER, xp);
-                pm.callEvent(jobevent);
             	if(itemUtil.isSword(item)){
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.SWORD, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.SWORD, xp);
                     pm.callEvent(skillevent);
             	}else if(itemUtil.isAxe(item)){
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.AXE, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.AXE, xp);
                     pm.callEvent(skillevent);
             	}else if(itemUtil.isPick(item)){
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.PICKAXE, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.PICKAXE, xp);
                     pm.callEvent(skillevent);
             	}else if(itemUtil.isHoe(item)){
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.HOE, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.HOE, xp);
                     pm.callEvent(skillevent);
             	}else if(itemUtil.isShovel(item)){
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.SHOVEL, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.SHOVEL, xp);
                     pm.callEvent(skillevent);
             	}else if(itemUtil.isUnarmed(item)){
-                    SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.UNARMED, xp);
+                    SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.UNARMED, xp);
                     pm.callEvent(skillevent);
             	}else{
             		return;
@@ -81,15 +78,16 @@ public class EntityListener implements Listener{
 	public void EntityDamagebyPlayer(EntityDamageByEntityEvent event){
 		if(event.getDamager() instanceof Player){
 			Player player = (Player)event.getDamager();
+			UUID id = player.getUniqueId();
 			double damage = event.getDamage();
 			if(itemUtil.isUnarmed(player.getItemInHand())){
-				double dmg = AbilitiesManager.runPowerPunch(player, damage);
+				double dmg = AbilitiesManager.runPowerPunch(id, damage);
 				event.setDamage(dmg);
-				userManager.scoreboard(player);
+				userManager.getUser(id).scoreboard();
 			}else if(itemUtil.isSword(player.getItemInHand())){
-				double dmg = AbilitiesManager.runPowerSword(player, damage);
+				double dmg = AbilitiesManager.runPowerSword(id, damage);
 				event.setDamage(dmg);
-				userManager.scoreboard(player);
+				userManager.getUser(id).scoreboard();
 			}
 		}
 	}
@@ -102,7 +100,7 @@ public class EntityListener implements Listener{
 
 		Player player = (Player)event.getEntity();
 		Arrow arrow = (Arrow)event.getProjectile();
-		AbilitiesManager.runBlazingArrows(player, arrow);
+		AbilitiesManager.runBlazingArrows(player.getUniqueId(), arrow);
 	}
 	
 }

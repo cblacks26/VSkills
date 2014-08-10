@@ -8,12 +8,12 @@ public abstract class Database {
 	}
 	
 	public abstract Connection getConnection();
+	
+	public abstract void closeConnection();
 
 	public abstract boolean initialize();
 	
 	public abstract boolean open();
-	
-	public abstract void closeConnection();
 	
 	public abstract void createTables();
 	

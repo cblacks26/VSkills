@@ -60,29 +60,6 @@ public class BlockUtil {
 		}
 	}
 	
-	public int getBlockPlaceXP(Material block){
-		switch(block){
-			case STONE: return 2;
-			case SOUL_SAND: return 2;
-			case MYCEL: return 3;
-			case LOG: return 2;
-			case IRON_BLOCK: return 3;
-			case GOLD_BLOCK: return 4;
-			case DIAMOND_BLOCK: return 5;
-			case EMERALD_BLOCK: return 6;
-			case LAPIS_BLOCK: return 4;
-			default: return 1;
-		}
-	}
-
-	public boolean isFarmerPlaceable(Material block){
-		switch(block){
-			case DIRT: case GRASS: case SEEDS: case PUMPKIN_SEEDS: case MELON_SEEDS: case CACTUS: case CARROT:
-			case POTATO: case SUGAR_CANE: case CROPS: return true;
-			default: return false;
-		}
-	}
-	
 	public int getFarmerPlaceXP(Material block){
 		switch(block){
 			case SEEDS: case PUMPKIN_SEEDS: case MELON_SEEDS: case CACTUS: case CARROT: case POTATO: 
@@ -97,29 +74,4 @@ public class BlockUtil {
 			default: return false;
 		}
 	}
-
-	public boolean isFarmerDestroyable(Material block){
-		switch(block){
-			case SUGAR_CANE_BLOCK: case MELON_BLOCK: case WHEAT: case CACTUS: case CARROT: case POTATO:
-			case CROPS: return true;
-			default: return false;
-		}
-	}
-	
-	public int getFarmerDestroyXP(Material block){
-		switch(block){
-			case SUGAR_CANE_BLOCK: case MELON_BLOCK: case WHEAT: case CACTUS: case CARROT: case POTATO: 
-			case CROPS: return 2;
-			default: return 1;
-		}
-	}
-
-	public boolean isPlaceable(Material block){
-		switch(block){
-			case SOIL: case BOAT: case MINECART: case FIREWORK: case DIRT: case GRASS: case SEEDS: case PUMPKIN_SEEDS: return false;
-			case MELON_SEEDS: case CACTUS: case CARROT: case POTATO: case SUGAR_CANE: case CROPS: return false;
-			default: return true;
-		}
-	}
-	
 }

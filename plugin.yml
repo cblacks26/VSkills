@@ -20,7 +20,7 @@ commands:
     usage: /VSkills
   VSet:
     description: Set the specified player's 
-    usage: /VSet <player> <Skill, Job> <Skill/Job name> <level, exp> <value> or <player> <rank> <value>
+    usage: /VSet <player> <Skill/Job name> <level, exp> <value> or <player> <rank> <value>
   VSave:
     description: Saves all the loaded player's data
     usage: /VSave

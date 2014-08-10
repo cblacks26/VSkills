@@ -9,13 +9,14 @@ import org.bukkit.entity.Player;
 
 import com.github.vskills.Main;
 import com.github.vskills.datatypes.Commands;
-import com.github.vskills.util.AbilitiesManager;
+import com.github.vskills.user.User;
 import com.github.vskills.util.UserManager;
 
 public class CommandPower implements CommandExecutor {
 
 	UserManager userManager = Main.getUserManager();
 	
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("VPower")){
 			if(sender instanceof Player){
@@ -26,8 +27,9 @@ public class CommandPower implements CommandExecutor {
 						return true;
 					}else{
 						if(args[0].equalsIgnoreCase("refresh")){
-							AbilitiesManager.refreshPower(player);
-							userManager.scoreboard(player);
+							User user = userManager.getUser(player.getUniqueId());
+							user.refreshPower();
+							user.scoreboard();
 							player.sendMessage(ChatColor.GREEN + "Your power has been refreshed!");
 						}
 					}
@@ -39,8 +41,9 @@ public class CommandPower implements CommandExecutor {
 						}
 						Player tplayer = Bukkit.getPlayer(args[1]);
 						if(tplayer != null){
-							AbilitiesManager.refreshPower(tplayer);
-							userManager.scoreboard(tplayer);
+							User user = userManager.getUser(tplayer.getUniqueId());
+							user.refreshPower();
+							user.scoreboard();
 							tplayer.sendMessage(ChatColor.GREEN + "Your power has been refreshed!");
 							player.sendMessage(ChatColor.GREEN + "Your refreshed " + args[1] + "'s power!");
 						}else{
@@ -57,8 +60,10 @@ public class CommandPower implements CommandExecutor {
 						if(tplayer != null){
 							if(Main.isInteger(args[2])){
 								int p = Integer.parseInt(args[2]);
-								AbilitiesManager.setPlayerMaxPower(tplayer, p);;
-								userManager.scoreboard(tplayer);
+								User user = userManager.getUser(tplayer.getUniqueId());
+								user.setMaxPower(p);
+								user.refreshPower();
+								user.scoreboard();
 								tplayer.sendMessage(ChatColor.GREEN + "Your max power has been set to " + p);
 								player.sendMessage(ChatColor.GREEN + "Your set " + args[1] + "'s max power to " + p);
 							}			
@@ -75,8 +80,9 @@ public class CommandPower implements CommandExecutor {
 					if(args[0].equalsIgnoreCase("refresh")){
 						Player tplayer = Bukkit.getPlayer(args[1]);
 						if(tplayer != null){
-							AbilitiesManager.refreshPower(tplayer);
-							userManager.scoreboard(tplayer);
+							User user = userManager.getUser(tplayer.getUniqueId());
+							user.refreshPower();
+							user.scoreboard();
 							tplayer.sendMessage(ChatColor.GREEN + "Your power has been refreshed!");
 							sender.sendMessage(ChatColor.GREEN + "Your refreshed " + args[1] + "'s power!");
 						}else{
@@ -89,8 +95,10 @@ public class CommandPower implements CommandExecutor {
 						if(tplayer != null){
 							if(Main.isInteger(args[2])){
 								int p = Integer.parseInt(args[2]);
-								AbilitiesManager.setPlayerMaxPower(tplayer, p);;
-								userManager.scoreboard(tplayer);
+								User user = userManager.getUser(tplayer.getUniqueId());
+								user.setMaxPower(p);
+								user.refreshPower();
+								user.scoreboard();
 								tplayer.sendMessage(ChatColor.GREEN + "Your max power has been set to " + p);
 								sender.sendMessage(ChatColor.GREEN + "Your set " + args[1] + "'s max power to " + p);
 							}			

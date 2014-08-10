@@ -43,16 +43,6 @@ public class SQLite extends Database{
 		}
 	}
 	
-	public void closeConnection(){
-		try{
-			if(c != null){
-				c.close();
-			}
-		}catch(SQLException e){
-			Main.writeError("Error closing Connection: " + e.getMessage());
-		}
-	}
-	
 	public Connection getConnection(){
 		if(open()){
 			return c;
@@ -68,14 +58,12 @@ public class SQLite extends Database{
         	c = getConnection();
         	c.setAutoCommit(false);
 			s = c.createStatement();
-			String extra = "CREATE TABLE IF NOT EXISTS VSkills (name VARCHAR(50), kills Integer, deaths Integer," +
+			String extra = "CREATE TABLE IF NOT EXISTS VSkills (id Text, kills Integer, deaths Integer," +
 					" tokens Integer, money Double, rank Integer, power Integer, cpower Integer)";
-			String xp = "CREATE TABLE IF NOT EXISTS VSkills_xp (name VARCHAR(50), acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
-					" shovel Integer, sword Integer, unarmed Integer, builder Integer, digger Integer, farmer Integer," +
-					" hunter Integer, miner Integer, woodcutter Integer)";
-			String level = "CREATE TABLE IF NOT EXISTS VSkills_levels (name VARCHAR(50), acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
-					" shovel Integer, sword Integer, unarmed Integer, builder Integer, digger Integer, farmer Integer," +
-					" hunter Integer, miner Integer, woodcutter Integer)";
+			String xp = "CREATE TABLE IF NOT EXISTS VSkills_xp (id Text, acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
+					" shovel Integer, sword Integer, unarmed Integer)";
+			String level = "CREATE TABLE IF NOT EXISTS VSkills_lvl (id Text, acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
+					" shovel Integer, sword Integer, unarmed Integer)";
 			s.addBatch(extra);
 			s.addBatch(xp);
 			s.addBatch(level);
@@ -85,6 +73,16 @@ public class SQLite extends Database{
 			c.close();
 		} catch (SQLException e) {
 			Main.writeError("Error Creating Tables: " + e.getMessage());
+		}
+	}
+
+	public void closeConnection(){
+		try{
+			if(c != null){
+				c.close();
+			}
+		}catch(SQLException e){
+			Main.writeError("Error closing Connection: " + e.getMessage());
 		}
 	}
 }

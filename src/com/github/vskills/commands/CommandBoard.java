@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.github.vskills.Main;
 import com.github.vskills.datatypes.Commands;
+import com.github.vskills.user.User;
 import com.github.vskills.util.UserManager;
 
 public class CommandBoard implements CommandExecutor{
@@ -18,16 +19,24 @@ public class CommandBoard implements CommandExecutor{
 		if (cmd.getName().equalsIgnoreCase("VBoard")){
 			if(sender instanceof Player){
 				Player player = (Player) sender;
+				User user = userManager.getUser(player.getUniqueId());
 				if(Main.isAuthorized(player, "VSkills.board")){
 					if(args.length == 1){
-						if(args[0].equalsIgnoreCase("Jobslevel") || args[0].equalsIgnoreCase("JL")) userManager.setScoreboard(player, "jobs");
-						else if(args[0].equalsIgnoreCase("SkillsLevel") || args[0].equalsIgnoreCase("SL")) userManager.setScoreboard(player, "skills");
-						else if(args[0].equalsIgnoreCase("Stats")) userManager.setScoreboard(player, "stats");
-						else if(args[0].equalsIgnoreCase("SkillsXP") || args[0].equalsIgnoreCase("SXP")) userManager.setScoreboard(player, "skillsexp");
-						else if(args[0].equalsIgnoreCase("JobsXP") || args[0].equalsIgnoreCase("JXP")) userManager.setScoreboard(player, "jobsexp");
-						else if(args[0].equalsIgnoreCase("Power") || args[0].equalsIgnoreCase("Powers")) userManager.setScoreboard(player, "power");
+						if(args[0].equalsIgnoreCase("Level") || args[0].equalsIgnoreCase("Lvl")){ 
+							user.setScoreboard("level");
+							user.scoreboard();
+						}else if(args[0].equalsIgnoreCase("Stats")) {
+							user.setScoreboard("stats");
+							user.scoreboard();
+						}else if(args[0].equalsIgnoreCase("XP") || args[0].equalsIgnoreCase("XP")) {
+							user.setScoreboard("xp");
+							user.scoreboard();
+						}else if(args[0].equalsIgnoreCase("Power") || args[0].equalsIgnoreCase("Powers")){
+							user.setScoreboard("power");
+							user.scoreboard();
+						}
 						else {
-							player.sendMessage("VBoard Options: JL, SL, JXP, SXP, Stats");
+							player.sendMessage("VBoard Options: Lvl, XP, Power, Stats");
 						}
 					}else{
 						player.sendMessage("Usage: " + Commands.VBOARD.getUsage());

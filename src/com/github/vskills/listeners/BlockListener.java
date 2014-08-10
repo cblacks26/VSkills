@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,16 +15,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.vskills.Main;
 import com.github.vskills.datatypes.AbilityType;
-import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
-import com.github.vskills.events.JobXPGainEvent;
 import com.github.vskills.events.SkillXPGainEvent;
 import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.BlockUtil;
@@ -39,77 +37,43 @@ public class BlockListener implements Listener{
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
-		Player player = event.getPlayer();
+		UUID id = event.getPlayer().getUniqueId();
 		Material block = event.getBlock().getType();
 		ItemStack item = event.getPlayer().getItemInHand();
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		if(blockUtil.isDigable(block)){
 			int xp = blockUtil.getBlockDestroyXP(block);
-			JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.DIGGER, xp);
-			pm.callEvent(jobevent);
 			if(itemUtil.isShovel(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.SHOVEL, xp);
+				SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.SHOVEL, xp);
 				pm.callEvent(skillevent);
 			}else if(itemUtil.isUnarmed(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.UNARMED, xp);
+				SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.UNARMED, xp);
 				pm.callEvent(skillevent);
 			}else{
 				return;
 			}
 		}else if(blockUtil.isCuttable(block)){
 			int xp = blockUtil.getBlockDestroyXP(block);
-			JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.WOODCUTTER, xp);
-			pm.callEvent(jobevent);
 			if(itemUtil.isAxe(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.AXE, xp);
+				SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.AXE, xp);
 				pm.callEvent(skillevent);
 			}else if(itemUtil.isUnarmed(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.UNARMED, xp);
+				SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.UNARMED, xp);
 				pm.callEvent(skillevent);
 			}else{
 				return;
 			}
 		}else if(blockUtil.isMinable(block)){
 			int xp = blockUtil.getBlockDestroyXP(block);
-			JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.MINER, xp);
-			pm.callEvent(jobevent);
 			if(itemUtil.isPick(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.PICKAXE, xp);
+				SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.PICKAXE, xp);
 				pm.callEvent(skillevent);
 			}else if(itemUtil.isUnarmed(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.UNARMED, xp);
+				SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.UNARMED, xp);
 				pm.callEvent(skillevent);
 			}else{
 				return;
 			}
-		}else if(blockUtil.isFarmerDestroyable(block)){
-			int xp = blockUtil.getFarmerDestroyXP(block);
-			JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.FARMER, xp);
-			pm.callEvent(jobevent);
-			if(itemUtil.isUnarmed(item)){
-				SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.UNARMED, xp);
-				pm.callEvent(skillevent);
-			}else{
-				return;
-			}
-		}else{
-			return;
-		}
-	}
-
-	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event){
-		Player player = event.getPlayer();
-		Material block = event.getBlock().getType();
-		PluginManager pm = Bukkit.getServer().getPluginManager();
-		if(blockUtil.isPlaceable(block)){
-			int xp = blockUtil.getBlockPlaceXP(block);
-			JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.BUILDER, xp);
-			pm.callEvent(jobevent);
-		}else if(blockUtil.isFarmerPlaceable(block)){
-			int xp = blockUtil.getFarmerPlaceXP(block);
-			JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.FARMER, xp);
-			pm.callEvent(jobevent);
 		}else{
 			return;
 		}
@@ -118,31 +82,32 @@ public class BlockListener implements Listener{
 	@EventHandler
 	public void onBlockDamage(BlockDamageEvent event){
 		Player player = event.getPlayer();
+		UUID id = player.getUniqueId();
 		Block block = event.getBlock();
 		Material b = block.getType();
 		ItemStack item = player.getItemInHand();
 		if(blockUtil.isMinable(b)){
 			if(itemUtil.isPick(item)){
-				if(AbilitiesManager.isToggled(player, AbilityType.INSTAMINE)){
+				if(Main.userManager.getUser(id).getAbility()== AbilityType.INSTAMINE){
 					int xp = blockUtil.getBlockDestroyXP(b);
 					event.setCancelled(true);
-					AbilitiesManager.runInstaMine(player, block, xp);
+					AbilitiesManager.runInstaMine(id, block, xp);
 				}
 			}
 		}else if(blockUtil.isDigable(b)){
 			if(itemUtil.isShovel(item)){
-				if(AbilitiesManager.isToggled(player, AbilityType.INSTADIG)){
+				if(Main.userManager.getUser(id).getAbility()== AbilityType.INSTADIG){
 					int xp = blockUtil.getBlockDestroyXP(b);
 					event.setCancelled(true);
-					AbilitiesManager.runInstaDig(player, block, xp);
+					AbilitiesManager.runInstaDig(id, block, xp);
 				}
 			}
 		}else if(blockUtil.isCuttable(b)){
 			if(itemUtil.isAxe(item)){
-				if(AbilitiesManager.isToggled(player, AbilityType.INSTACUT)){
+				if(Main.userManager.getUser(id).getAbility()== AbilityType.INSTACUT){
 					int xp = blockUtil.getBlockDestroyXP(b);
 					event.setCancelled(true);
-					AbilitiesManager.runInstaCut(player, block, xp);
+					AbilitiesManager.runInstaCut(id, block, xp);
 				}
 			}
 		}

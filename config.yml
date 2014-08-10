@@ -5,10 +5,3 @@ MySQL:
     Database: Minecraft
     Hostname: localhost
     Port: 3306
-Ranks:
-  1: Private
-  2: Private I
-  3: Private II
-  4: Sergeant
-  5: Sergeant I
-  6: Sergeant II

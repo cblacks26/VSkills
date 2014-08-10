@@ -1,5 +1,7 @@
 package com.github.vskills.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,10 +21,9 @@ import org.bukkit.plugin.PluginManager;
 
 import com.github.vskills.Main;
 import com.github.vskills.datatypes.AbilityType;
-import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
-import com.github.vskills.events.JobXPGainEvent;
 import com.github.vskills.events.SkillXPGainEvent;
+import com.github.vskills.user.User;
 import com.github.vskills.util.AbilitiesManager;
 import com.github.vskills.util.BlockUtil;
 import com.github.vskills.util.DamageUtil;
@@ -40,71 +41,81 @@ public class PlayerListener implements Listener{
 	
 	@EventHandler
 	public void PlayerJoin(PlayerJoinEvent event){
-		Player player = event.getPlayer();
-		if(userManager.checkUser(player) == false){
-			userManager.createUser(player);
-		}
-		userManager.addUser(player);
-		AbilitiesManager.addUser(player);
-		userManager.scoreboard(player);
+		UUID id = event.getPlayer().getUniqueId();
+		userManager.addUser(id);
+		userManager.getUser(id).scoreboard();
 	}
 	
 	@EventHandler
 	public void PlayerLeave(PlayerQuitEvent event){
-		Player player = event.getPlayer();
-		if(userManager.checkGod(player)){
-			userManager.takeGod(player);
-		}
-		userManager.saveUser(player);
-		userManager.removeUser(player);
-		AbilitiesManager.removeUser(player);
+		UUID id = event.getPlayer().getUniqueId();
+		userManager.getUser(id).saveUser();
+		userManager.removeUser(id);
 	}
 				
 	@EventHandler
 	public void InteractEvent(PlayerInteractEvent event){
 		ItemStack item = event.getItem();
-		Player player = event.getPlayer();
+		User user = userManager.getUser(event.getPlayer().getUniqueId());
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		if(item == null){
 			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-				AbilitiesManager.toggleAbility(player, AbilityType.POWERPUNCH);
-				return;
-			}else{
+				if(user.getAbility() == AbilityType.POWERPUNCH){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.POWERPUNCH);
+				}
+				user.scoreboard();
 				return;
 			}
 		}else if(itemUtil.isPick(item)){
 			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-				AbilitiesManager.toggleAbility(player, AbilityType.INSTAMINE);
-				return;
-			}else{
+				if(user.getAbility() == AbilityType.INSTAMINE){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.INSTAMINE);
+				}
+				user.scoreboard();
 				return;
 			}
 		}else if(itemUtil.isShovel(item)){
 			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-				AbilitiesManager.toggleAbility(player, AbilityType.INSTADIG);
-				return;
-			}else{
+				if(user.getAbility() == AbilityType.INSTADIG){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.INSTADIG);
+				}
+				user.scoreboard();
 				return;
 			}
 		}else if(itemUtil.isAxe(item)){
 			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-				AbilitiesManager.toggleAbility(player, AbilityType.INSTACUT);
-				return;
-			}else{
+				if(user.getAbility() == AbilityType.INSTACUT){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.INSTACUT);
+				}
+				user.scoreboard();
 				return;
 			}
 		}else if(itemUtil.isSword(item)){
 			if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-				AbilitiesManager.toggleAbility(player, AbilityType.POWERSWORD);
-				return;
-			}else{
+				if(user.getAbility() == AbilityType.POWERSWORD){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.POWERSWORD);
+				}
+				user.scoreboard();
 				return;
 			}
 		}else if(itemUtil.isBow(item)){
 			if(event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-				AbilitiesManager.toggleAbility(player, AbilityType.BLAZINGARROWS);
-				return;
-			}else{
+				if(user.getAbility() == AbilityType.BLAZINGARROWS){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.BLAZINGARROWS);
+				}
+				user.scoreboard();
 				return;
 			}
 		}else if(itemUtil.isHoe(item) == true){
@@ -112,25 +123,28 @@ public class PlayerListener implements Listener{
 				Block block = event.getClickedBlock();
 				Material b = block.getType();
 				if(blockUtil.isFarmable(b)){
-					JobXPGainEvent jobevent = new JobXPGainEvent(player, JobType.FARMER, 1);
-					pm.callEvent(jobevent);
-					SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.HOE, 1);
+					SkillXPGainEvent skillevent = new SkillXPGainEvent(user.getID(), SkillType.HOE, 1);
 					pm.callEvent(skillevent);
 					return;
 				}
 				if(blockUtil.isInstaGrowable(b)){
-					AbilitiesManager.runInstaGrow(player, block);
+					AbilitiesManager.runInstaGrow(user.getID(), block);
 				}
 			}else if(event.getAction().equals(Action.LEFT_CLICK_AIR)){
-				AbilitiesManager.toggleAbility(player, AbilityType.INSTAGROW);
+				if(user.getAbility() == AbilityType.INSTAGROW){
+					user.unToggle();
+				}else{
+					user.setAbility(AbilityType.INSTAGROW);
+				}
+				user.scoreboard();
 			}
 		}else if(item.getType() == Material.BONE){
 			if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
 				Block block = event.getClickedBlock();
 				Material b = block.getType();
 				BlockState bs = block.getState();
-				player.sendMessage(b.name());
-				player.sendMessage(bs.toString());
+				event.getPlayer().sendMessage(b.name());
+				event.getPlayer().sendMessage(bs.toString());
 			}
 		}
 	}
@@ -138,16 +152,13 @@ public class PlayerListener implements Listener{
 	@EventHandler
  	public void PlayerKill(PlayerDeathEvent event){
 		Player player = event.getEntity().getPlayer();
-		int deaths = userManager.getDeaths(player);
-		int newdeaths = deaths + 1;
-		userManager.setDeaths(player, newdeaths);
-		userManager.scoreboard(player);
+		User user = userManager.getUser(player.getUniqueId());
+		user.addDeath();
+		user.scoreboard();
 		if(player.getKiller() instanceof Player){
-			Player killer = player.getKiller();
-			int kills = userManager.getKills(killer);
-			int newkills = kills + 1;
-			userManager.setKills(killer, newkills);
-			userManager.scoreboard(killer);
+			User killer = userManager.getUser(player.getKiller().getUniqueId());
+			killer.addKill();
+			killer.scoreboard();
 		}
 	}
 		
@@ -156,7 +167,7 @@ public class PlayerListener implements Listener{
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		if(event.getEntity() instanceof Player){
 			Player player = (Player)event.getEntity();
-			if(userManager.checkGod(player)){
+			if(userManager.getUser(player.getUniqueId()).isGod()){
 				event.setCancelled(true);
 			}
 		    if (event.getCause() == DamageCause.FALL) {
@@ -165,7 +176,7 @@ public class PlayerListener implements Listener{
 		    	while(dmg>count){
 		    		count++;
 		    	}
-		    	SkillXPGainEvent skillevent = new SkillXPGainEvent(player, SkillType.ACROBATICS, count);
+		    	SkillXPGainEvent skillevent = new SkillXPGainEvent(player.getUniqueId(), SkillType.ACROBATICS, count);
 		    	pm.callEvent(skillevent);
 		    	event.setDamage(damageUtil.getFallDamage(player, event.getDamage()));
 		    }

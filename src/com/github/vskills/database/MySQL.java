@@ -38,17 +38,26 @@ public class MySQL extends Database{
 	
 	public boolean open(){
 	    if (initialize()) {
-	      String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname;
-	      try {
-	        c = DriverManager.getConnection(url, username, password);
-	        return true;
-	      } catch (SQLException e) {
-	        Main.writeError("Could not establish a MySQL connection: " + e.getMessage());
-	        return false;
-	      }
+	    	String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname;
+	    	try {
+	    		c = DriverManager.getConnection(url, username, password);
+		        return true;
+	    	} catch (SQLException e) {
+		        Main.writeError("Could not establish a MySQL connection: " + e.getMessage());
+		        return false;
+	    	}
 	    }
 	    return false;
-	  }
+	}
+	
+	public Connection getConnection(){
+		if(open()){
+			return c;
+		}else{
+			Main.writeError("Connection is null");
+			return null;
+		}
+	}
 	
 	public void closeConnection(){
 		try{
@@ -60,29 +69,18 @@ public class MySQL extends Database{
 		}
 	}
 	
-	public Connection getConnection(){
-		if(open()){
-			return c;
-		}else{
-			Main.writeError("Connection is null");
-			return null;
-		}
-	}
-
 	public void createTables(){
 		try {
 			open();
         	c = getConnection();
         	c.setAutoCommit(false);
 			s = c.createStatement();
-			String extra = "CREATE TABLE IF NOT EXISTS VSkills (name VARCHAR(50), kills Integer, deaths Integer," +
+			String extra = "CREATE TABLE IF NOT EXISTS VSkills (id Text, kills Integer, deaths Integer," +
 					" tokens Integer, money Double, rank Integer, power Integer, cpower Integer)";
-			String xp = "CREATE TABLE IF NOT EXISTS VSkills_xp (name VARCHAR(50), acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
-					" shovel Integer, sword Integer, unarmed Integer, builder Integer, digger Integer, farmer Integer," +
-					" hunter Integer, miner Integer, woodcutter Integer)";
-			String level = "CREATE TABLE IF NOT EXISTS VSkills_levels (name VARCHAR(50), acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
-					" shovel Integer, sword Integer, unarmed Integer, builder Integer, digger Integer, farmer Integer," +
-					" hunter Integer, miner Integer, woodcutter Integer)";
+			String xp = "CREATE TABLE IF NOT EXISTS VSkills_xp (id Text, acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
+					" shovel Integer, sword Integer, unarmed Integer)";
+			String level = "CREATE TABLE IF NOT EXISTS VSkills_lvl (id Text, acrobat Integer, archery Integer, axe Integer, hoe Integer, pickaxe Integer," +
+					" shovel Integer, sword Integer, unarmed Integer)";
 			s.addBatch(extra);
 			s.addBatch(xp);
 			s.addBatch(level);

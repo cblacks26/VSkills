@@ -8,12 +8,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.vskills.Main;
+import com.github.vskills.user.User;
 import com.github.vskills.util.UserManager;
 
 public class CommandGod implements CommandExecutor{
 	
 	UserManager userManager = Main.getUserManager();
 	
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("VGod")){
 			if(sender instanceof Player){
@@ -23,12 +25,11 @@ public class CommandGod implements CommandExecutor{
 						player.sendMessage(ChatColor.RED + "You don't have the Permissions for this command");
 						return true;
 					}else{
-						if(userManager.checkGod(player)){
-							userManager.takeGod(player);
-							player.sendMessage(ChatColor.GRAY + "God Mode Disabled");
-						}else{
-							userManager.giveGod(player);
+						User user = userManager.getUser(player.getUniqueId());
+						if(user.toggleGod()){
 							player.sendMessage(ChatColor.GRAY + "God Mode Enabled");
+						}else{
+							player.sendMessage(ChatColor.GRAY + "God Mode Disabled");
 						}
 					}
 				}else if(args.length == 1){
@@ -38,14 +39,13 @@ public class CommandGod implements CommandExecutor{
 						return true;
 					}
 					if(tplayer != null){
-						if(userManager.checkGod(tplayer)){
-							userManager.takeGod(tplayer);
-							player.sendMessage(ChatColor.GRAY + "God Mode Disabled For " + tplayer.getName());
-							tplayer.sendMessage(ChatColor.GRAY + "God Mode Disabled");
-						}else{
-							userManager.giveGod(tplayer);
-							player.sendMessage(ChatColor.GRAY + "God Mode Enabled");
+						User user = userManager.getUser(tplayer.getUniqueId());
+						if(user.toggleGod()){
+							player.sendMessage(ChatColor.GRAY + "God Mode Enabled For " + tplayer.getName());
 							tplayer.sendMessage(ChatColor.GRAY + "God Mode Enabled");
+						}else{
+							player.sendMessage(ChatColor.GRAY + "God Mode Disabled");
+							tplayer.sendMessage(ChatColor.GRAY + "God Mode Disabled");
 						}
 					}
 				}else{
@@ -56,14 +56,13 @@ public class CommandGod implements CommandExecutor{
 				if(args.length == 1){
 					Player tplayer = Bukkit.getPlayer(args[0]);
 					if(tplayer != null){
-						if(userManager.checkGod(tplayer)){
-							userManager.takeGod(tplayer);
-							sender.sendMessage(ChatColor.GRAY + "God Mode Disabled For " + tplayer.getName());
-							tplayer.sendMessage(ChatColor.GRAY + "God Mode Disabled");
-						}else{
-							userManager.giveGod(tplayer);
-							sender.sendMessage(ChatColor.GRAY + "God Mode Enabled");
+						User user = userManager.getUser(tplayer.getUniqueId());
+						if(user.toggleGod()){
+							sender.sendMessage(ChatColor.GRAY + "God Mode Enabled For " + tplayer.getName());
 							tplayer.sendMessage(ChatColor.GRAY + "God Mode Enabled");
+						}else{
+							sender.sendMessage(ChatColor.GRAY + "God Mode Disabled");
+							tplayer.sendMessage(ChatColor.GRAY + "God Mode Disabled");
 						}
 					}
 				}

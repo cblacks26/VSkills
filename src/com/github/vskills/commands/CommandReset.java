@@ -15,6 +15,7 @@ public class CommandReset implements CommandExecutor{
 
 	UserManager userManager = Main.getUserManager();
 	
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("VReset")){
 			if(sender instanceof Player){
@@ -28,7 +29,7 @@ public class CommandReset implements CommandExecutor{
 					if(tplayer == null){
 						tplayer = (Bukkit.getServer().getOfflinePlayer(args[0]));
 						if(tplayer.hasPlayedBefore()){
-							userManager.resetOfflineAll(tplayer);
+							userManager.getUser(tplayer.getUniqueId()).resetUser();
 							player.sendMessage(ChatColor.GOLD + "You reset " + tplayer.getName());
 							return true;
 						}
@@ -39,8 +40,8 @@ public class CommandReset implements CommandExecutor{
 					}
 					if(tplayer.isOnline()){
 						Player tp = Bukkit.getServer().getPlayer(args[0]);
-						userManager.resetOnlineAll(tp);
-						userManager.scoreboard(tp);
+						userManager.getUser(tplayer.getUniqueId()).resetUser();
+						userManager.getUser(tplayer.getUniqueId()).scoreboard();
 						player.sendMessage(ChatColor.GOLD + "You reset " + tp.getName());
 						tp.sendMessage(ChatColor.GRAY + "You have been reset");
 						return true;
@@ -54,7 +55,7 @@ public class CommandReset implements CommandExecutor{
 					if(tplayer == null){
 						tplayer = (Bukkit.getServer().getOfflinePlayer(args[0]));
 						if(tplayer.hasPlayedBefore()){
-							userManager.resetOfflineAll(tplayer);
+							userManager.getUser(tplayer.getUniqueId()).resetUser();
 							return true;
 						}
 						if(!tplayer.hasPlayedBefore()){
@@ -64,8 +65,8 @@ public class CommandReset implements CommandExecutor{
 					}
 					if(tplayer.isOnline()){
 						Player tp = Bukkit.getServer().getPlayer(args[0]);
-						userManager.resetOnlineAll(tp);
-						userManager.scoreboard(tp);
+						userManager.getUser(tplayer.getUniqueId()).resetUser();
+						userManager.getUser(tplayer.getUniqueId()).scoreboard();
 						sender.sendMessage(ChatColor.GOLD + "You reset " + tp.getName());
 						tp.sendMessage(ChatColor.GRAY + "You have been reset");
 						return true;

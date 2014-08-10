@@ -1,22 +1,23 @@
 package com.github.vskills.events;
 
-import org.bukkit.entity.Player;
+import java.util.UUID;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class RankUpEvent extends Event{
 
 	private static final HandlerList handlers = new HandlerList();
-    private Player player;
+    private UUID id;
     private int rank;
     
-    public RankUpEvent(Player player, int rank) {
-        this.player = player;
+    public RankUpEvent(UUID id, int rank) {
+        this.id = id;
         this.rank = rank;
     }
 
-	public Player getPlayer() {
-        return player;
+	public UUID getUserID() {
+        return id;
     }
     
     public int getRank(){
@@ -30,7 +31,4 @@ public class RankUpEvent extends Event{
     public static HandlerList getHandlerList() {
         return handlers;
     }
-
-	
-	
 }

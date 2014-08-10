@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,21 +19,18 @@ import com.github.vskills.commands.CommandHelp;
 import com.github.vskills.commands.CommandPower;
 import com.github.vskills.commands.CommandReset;
 import com.github.vskills.commands.CommandSave;
-import com.github.vskills.commands.CommandSet;
 import com.github.vskills.commands.CommandStats;
 import com.github.vskills.commands.CommandTokens;
 import com.github.vskills.database.Database;
 import com.github.vskills.database.MySQL;
 import com.github.vskills.database.SQLite;
-import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
 import com.github.vskills.listeners.BlockListener;
-import com.github.vskills.listeners.ChatListener;
 import com.github.vskills.listeners.EntityListener;
 import com.github.vskills.listeners.PlayerListener;
 import com.github.vskills.listeners.VSkillsListener;
 import com.github.vskills.runnables.UserSaveTask;
-import com.github.vskills.util.AbilitiesManager;
+import com.github.vskills.user.User;
 import com.github.vskills.util.UserManager;
 
 public class Main extends JavaPlugin{
@@ -41,7 +38,6 @@ public class Main extends JavaPlugin{
 	private final static Logger log = Logger.getLogger("Minecraft");
 	private static Economy eco = null;
 	private static Permission perms = null;
-	private static Chat chat = null;
 	public static Database sql;
 	private String user;
 	private String password; 
@@ -58,16 +54,14 @@ public class Main extends JavaPlugin{
 	}
 
 	public void onEnable(){
+		saveDefaultConfig();
 		getMySQL();
 		setupEconomy();
 		setupPermissions();
-		setupChat();
 		registerEvents();
 		getCommands();
 		scheduledTasks();
-		saveDefaultConfig();
 		sql.createTables();
-		AbilitiesManager.addUsers();
     	userManager.addUsers();
     	userManager.getScoreboards();
 	}
@@ -77,7 +71,6 @@ public class Main extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(new VSkillsListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new EntityListener(), this);
-		getServer().getPluginManager().registerEvents(new ChatListener(this), this);
 	}
 	
 	private void getCommands(){
@@ -86,7 +79,6 @@ public class Main extends JavaPlugin{
 		this.getCommand("VPower").setExecutor(new CommandPower());
 		this.getCommand("VReset").setExecutor(new CommandReset());
 		this.getCommand("VSkills").setExecutor(new CommandHelp());
-		this.getCommand("VSet").setExecutor(new CommandSet());
 		this.getCommand("VSave").setExecutor(new CommandSave());
 		this.getCommand("VStats").setExecutor(new CommandStats());
 		this.getCommand("VTokens").setExecutor(new CommandTokens());
@@ -116,16 +108,6 @@ public class Main extends JavaPlugin{
         }
 	}
 	
-	private boolean setupChat()
-    {
-        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
-        if (chatProvider != null) {
-            chat = chatProvider.getProvider();
-        }
-
-        return (chat != null);
-    }
-	
 	private boolean setupEconomy(){
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
@@ -143,20 +125,16 @@ public class Main extends JavaPlugin{
         return (perms != null);
     }
 	
-	public static Chat getChat(){
-		return chat;
-	}
-
 	public static Permission getPerms(){
 		return perms;
 	}
 	
 	public static void depositPlayer(Player player, double val){
-		String name = player.getName();
-		if(!eco.hasAccount(name)){
-			eco.createPlayerAccount(name);
+		OfflinePlayer p = (OfflinePlayer) player;
+		if(!eco.hasAccount(p)){
+			eco.createPlayerAccount(p);
 		}else{
-			eco.depositPlayer(player.getName(), val);
+			eco.depositPlayer(p, val);
 		}
 	}
 	
@@ -205,24 +183,6 @@ public class Main extends JavaPlugin{
 		}
 		return true;
 	}
-
-	public static JobType matchJob(String s){
-		if(s.equalsIgnoreCase("Builder")){
-			return JobType.BUILDER;
-		}else if(s.equalsIgnoreCase("Digger")){
-			return JobType.DIGGER;
-		}else if(s.equalsIgnoreCase("Farmer")){
-			return JobType.FARMER;
-		}else if(s.equalsIgnoreCase("Hunter")){
-			return JobType.HUNTER;
-		}else if(s.equalsIgnoreCase("Miner")){
-			return JobType.MINER;
-		}else if(s.equalsIgnoreCase("Woodcutter")){
-			return JobType.WOODCUTTER;
-		}else{
-			return null;
-		}
-	}
 	
 	public static SkillType matchSkill(String s){
 		if(s.equalsIgnoreCase("Acrobatics") || s.equalsIgnoreCase("Acrobat")){
@@ -251,17 +211,15 @@ public class Main extends JavaPlugin{
 		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable()
 	    {
 			public void run(){
-				for (Player p : Main.this.getServer().getOnlinePlayers()){
-					int cpower = AbilitiesManager.getPlayerCurrentPower(p);
-					int power = AbilitiesManager.getPlayerMaxPower(p);
-					if (cpower < power){
-						AbilitiesManager.addPlayerCurrentPower(p, 1);
-						userManager.scoreboard(p);
+				for (Player p : Bukkit.getOnlinePlayers()){
+					User user = userManager.getUser(p.getUniqueId());
+					if (user.getCurrentPower() < user.getMaxPower()){
+						user.addCurrentPower(1);
+						user.scoreboard();
 					}
 	          	}
 			}
 	    }
 	    , 40L, 40L);
 	}
-
 }

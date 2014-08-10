@@ -1,48 +1,38 @@
 package com.github.vskills.util;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import com.github.vskills.Main;
-import com.github.vskills.datatypes.JobType;
 import com.github.vskills.datatypes.SkillType;
-import com.github.vskills.events.JobLevelUpEvent;
 import com.github.vskills.events.RankUpEvent;
 import com.github.vskills.events.SkillLevelUpEvent;
+import com.github.vskills.user.User;
 
 public class Ranks {
 	
-	public void userRankUp(Player player){
-		if(canRankUp(player) == true){
-			int rank = Main.getUserManager().getRank(player);
-			RankUpEvent event = new RankUpEvent(player, rank + 1);
+	public void userRankUp(UUID id){
+		if(canRankUp(id) == true){
+			int rank = Main.getUserManager().getUser(id).getRank();
+			RankUpEvent event = new RankUpEvent(id, rank + 1);
 			Bukkit.getServer().getPluginManager().callEvent(event);
 		}
 	}
-	
-	public void userLevelUp(Player player, JobType job){
-		if(canLevelUp(player, job) == true){
-			int lvl = Main.getUserManager().getJobLvl(player, job);
-			JobLevelUpEvent event = new JobLevelUpEvent(player, job, lvl + 1);
+	public void userLevelUp(UUID id, SkillType skill){
+		if(canLevelUp(id, skill) == true){
+			int lvl = Main.getUserManager().getUser(id).getLevel(skill);
+			SkillLevelUpEvent event = new SkillLevelUpEvent(id, skill, lvl + 1);
 			Bukkit.getServer().getPluginManager().callEvent(event);
-			userRankUp(player);
+			userRankUp(id);
 		}
 	}
 	
-	public void userLevelUp(Player player, SkillType skill){
-		if(canLevelUp(player, skill) == true){
-			int lvl = Main.getUserManager().getSkillLvl(player, skill);
-			SkillLevelUpEvent event = new SkillLevelUpEvent(player, skill, lvl + 1);
-			Bukkit.getServer().getPluginManager().callEvent(event);
-			userRankUp(player);
-		}
-	}
-	
-	private boolean canLevelUp(Player player, SkillType skill){
-		int level = Main.getUserManager().getSkillLvl(player, skill);
+	private boolean canLevelUp(UUID id, SkillType skill){
+		int level = Main.getUserManager().getUser(id).getLevel(skill);
 		int nextLevel = level + 1;
 		double half = nextLevel / 2;
-		int exp = Main.getUserManager().getSkillXP(player, skill);
+		int exp = Main.getUserManager().getUser(id).getXp(skill);
 		double expNeeded = 30 * nextLevel * half;
 		int expNeed = (int)Math.round(expNeeded);
 		if(exp >= expNeed){
@@ -52,32 +42,18 @@ public class Ranks {
 		}
 	}
 	
-	private boolean canLevelUp(Player player, JobType job){
-		int level = Main.getUserManager().getJobLvl(player, job);
-		int nextLevel = level + 1;
-		double half = nextLevel / 2;
-		int exp = Main.getUserManager().getJobXP(player, job);
-		double expNeeded = 30 * nextLevel * half;
-		int expNeed = (int)Math.round(expNeeded);
-		if(exp >= expNeed){
-			return true;
-		}else{
-			return false;
+	private boolean canRankUp(UUID id){
+		User user = Main.getUserManager().getUser(id);
+		int cRank = user.getRank();
+		cRank++;
+		int n = 0;
+		int levels = 0;
+		for(SkillType s: SkillType.values()){
+			n++;
+			levels = levels + user.getLevel(s);
 		}
-	}
-	
-	private boolean canRankUp(Player player){
-		int cRank = Main.getUserManager().getRank(player);
-		int nRank = cRank + 1;
-		int lNeeded = nRank * 6;
-		int dlevel = Main.getUserManager().getJobLvl(player, JobType.DIGGER);
-		int mlevel = Main.getUserManager().getJobLvl(player, JobType.MINER);
-		int flevel = Main.getUserManager().getJobLvl(player, JobType.FARMER);
-		int hlevel = Main.getUserManager().getJobLvl(player, JobType.HUNTER);
-		int blevel = Main.getUserManager().getJobLvl(player, JobType.BUILDER);
-		int wclevel = Main.getUserManager().getJobLvl(player, JobType.WOODCUTTER);
-		int levels = dlevel + mlevel + flevel + hlevel + blevel + wclevel;
-		if(levels >= lNeeded){
+		int needed = cRank * n;
+		if(levels >= needed){
 			return true;
 		}else{
 			return false;
