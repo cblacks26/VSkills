@@ -1,14 +1,15 @@
 name: VSkills
 main: com.github.vskills.Main
-version: 1.3
+version: 1.4
 author: cblacks26
+api-version: 1.16
 commands:
   VGod:
     description: Gives the specified player god mode
     usage: /VGod <player>
   VBoard:
     description: Toggles the types of scoreboards
-    usage: /VBoard [JL, SL, JXP, SXP, Stats, Power]
+    usage: /VBoard [XP, LVL, Stats, Power]
   VPower:
     description: Changes the players current power and max power
     usage: /VPower [refresh, set] <player> <power>

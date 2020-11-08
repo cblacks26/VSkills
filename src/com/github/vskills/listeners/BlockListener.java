@@ -39,7 +39,7 @@ public class BlockListener implements Listener{
 	public void onBlockBreak(BlockBreakEvent event){
 		UUID id = event.getPlayer().getUniqueId();
 		Material block = event.getBlock().getType();
-		ItemStack item = event.getPlayer().getItemInHand();
+		ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		if(blockUtil.isDigable(block)){
 			int xp = blockUtil.getBlockDestroyXP(block);
@@ -85,7 +85,7 @@ public class BlockListener implements Listener{
 		UUID id = player.getUniqueId();
 		Block block = event.getBlock();
 		Material b = block.getType();
-		ItemStack item = player.getItemInHand();
+		ItemStack item = player.getInventory().getItemInMainHand();
 		if(blockUtil.isMinable(b)){
 			if(itemUtil.isPick(item)){
 				if(Main.userManager.getUser(id).getAbility()== AbilityType.INSTAMINE){

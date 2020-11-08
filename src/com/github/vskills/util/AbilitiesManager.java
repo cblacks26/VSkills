@@ -3,14 +3,11 @@ package com.github.vskills.util;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.CropState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Crops;
 import org.bukkit.plugin.PluginManager;
 
 import com.github.vskills.Main;
@@ -94,7 +91,6 @@ public class AbilitiesManager {
 	
 	public static void runInstaGrow(UUID id, Block block){
 		Material b = block.getType();
-		BlockState bs = block.getState();
 		Location loc = block.getLocation();
 		Location down = loc.clone().subtract(0, 1, 0);
 		Location down2 = loc.clone().subtract(0, 2, 0);
@@ -106,26 +102,26 @@ public class AbilitiesManager {
 				block.setType(Material.PUMPKIN);
 				runAbility(id, AbilityType.INSTAGROW);
 			}else if(b == Material.MELON_STEM){
-				block.setType(Material.MELON_BLOCK);
+				block.setType(Material.MELON);
 				runAbility(id, AbilityType.INSTAGROW);
-			}else if(b == Material.SUGAR_CANE_BLOCK){
-				if(down.getBlock().getType() ==  Material.SUGAR_CANE_BLOCK){
-					if(up.getBlock().getType() == Material.SUGAR_CANE_BLOCK || down2.getBlock().getType() == Material.SUGAR_CANE_BLOCK){
+			}else if(b == Material.SUGAR_CANE){
+				if(down.getBlock().getType() ==  Material.SUGAR_CANE){
+					if(up.getBlock().getType() == Material.SUGAR_CANE || down2.getBlock().getType() == Material.SUGAR_CANE){
 						player.sendMessage("You cannot use InstaGrow on sugar cane taller than 2 blocks");
 						return;
 					}
 					if(up.getBlock().getType() == Material.AIR){
-						up.getBlock().setType(Material.SUGAR_CANE_BLOCK);
+						up.getBlock().setType(Material.SUGAR_CANE);
 						runAbility(id, AbilityType.INSTAGROW);
 					}
 				}else{
 					if(up.getBlock().getType() == Material.AIR){
 						if(up2.getBlock().getType() == Material.AIR){
-							up.getBlock().setType(Material.SUGAR_CANE_BLOCK);
-							up2.getBlock().setType(Material.SUGAR_CANE_BLOCK);
+							up.getBlock().setType(Material.SUGAR_CANE);
+							up2.getBlock().setType(Material.SUGAR_CANE);
 							runAbility(id, AbilityType.INSTAGROW);
 						}else{
-							up.getBlock().setType(Material.SUGAR_CANE_BLOCK);
+							up.getBlock().setType(Material.SUGAR_CANE);
 							runAbility(id, AbilityType.INSTAGROW);
 						}
 					}
@@ -151,12 +147,6 @@ public class AbilitiesManager {
 						}
 					}
 				}
-			}else if(b == Material.CROPS){
-				Crops c = new Crops(b);
-				c.setState(CropState.RIPE);
-				bs.setData(c);
-				bs.update();
-				runAbility(id, AbilityType.INSTAGROW);
 			}
 		}
 	}

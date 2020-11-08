@@ -40,10 +40,10 @@ public class User {
 	private Scoreboard lvlboard = Bukkit.getScoreboardManager().getNewScoreboard();
 	private Scoreboard powerboard = Bukkit.getScoreboardManager().getNewScoreboard();
 	private Scoreboard statsboard = Bukkit.getScoreboardManager().getNewScoreboard();
-	private Objective xpobject = xpboard.registerNewObjective("XP to level", "dummy");
-	private Objective lvlobject = lvlboard.registerNewObjective("levels", "dummy");
-	private Objective statsobject = statsboard.registerNewObjective("Stats", "dummy");
-	private Objective po = powerboard.registerNewObjective("Power", "dummy");
+	private Objective xpobject = xpboard.registerNewObjective("XP to level", "dummy", "XP to Level");
+	private Objective lvlobject = lvlboard.registerNewObjective("levels", "dummy","Levels");
+	private Objective statsobject = statsboard.registerNewObjective("Stats", "dummy","Stats");
+	private Objective po = powerboard.registerNewObjective("Power", "dummy","Power");
 	private final HashMap<SkillType, Integer> xp = new HashMap<SkillType, Integer>();
 	private final HashMap<SkillType, Integer> lvl = new HashMap<SkillType, Integer>();
 	

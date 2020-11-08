@@ -6,8 +6,7 @@ public class BlockUtil {
 
 	public boolean isDigable(Material block){
 		switch(block){
-			case GRASS: case DIRT: case SAND: case GRAVEL: case SOUL_SAND: case CLAY: case HARD_CLAY: case SOIL:
-			case SNOW: case MYCEL: return true;
+			case GRASS: case DIRT: case SAND: case GRAVEL: case SOUL_SAND: case CLAY: case SNOW: case MYCELIUM: return true;
 			default: return false;
 		}
 	}
@@ -21,7 +20,10 @@ public class BlockUtil {
 
 	public boolean isCuttable(Material block){
 		switch(block){
-			case LOG: case LEAVES: return true;
+			case ACACIA_LOG: case BIRCH_LOG: case DARK_OAK_LOG: case JUNGLE_LOG: case OAK_LOG:
+			case SPRUCE_LOG: case STRIPPED_ACACIA_LOG: case STRIPPED_BIRCH_LOG: case STRIPPED_DARK_OAK_LOG: 
+			case STRIPPED_JUNGLE_LOG: case STRIPPED_OAK_LOG: case STRIPPED_SPRUCE_LOG: case ACACIA_LEAVES: 
+			case BIRCH_LEAVES: case DARK_OAK_LEAVES: case JUNGLE_LEAVES: case OAK_LEAVES: case SPRUCE_LEAVES: return true;
 			default: return false;
 		}
 	}
@@ -44,11 +46,20 @@ public class BlockUtil {
 			case GRAVEL: return 2;
 			case SOUL_SAND: return 3;
 			case CLAY: return 3;
-			case HARD_CLAY: return 3;
-			case SOIL: return 1;
 			case SNOW: return 1;
-			case MYCEL: return 3;
-			case LOG: return 1;
+			case MYCELIUM: return 3;
+			case ACACIA_LOG: return 1;
+			case BIRCH_LOG: return 1;
+			case DARK_OAK_LOG: return 1;
+			case JUNGLE_LOG: return 1;
+			case OAK_LOG: return 1;
+			case SPRUCE_LOG: return 1;
+			case STRIPPED_ACACIA_LOG: return 1;
+			case STRIPPED_BIRCH_LOG: return 1;
+			case STRIPPED_DARK_OAK_LOG: return 1;
+			case STRIPPED_JUNGLE_LOG: return 1;
+			case STRIPPED_OAK_LOG: return 1;
+			case STRIPPED_SPRUCE_LOG: return 1;
 			case COAL_ORE: return 2;
 			case IRON_ORE: return 3;
 			case GOLD_ORE: return 4;
@@ -62,15 +73,15 @@ public class BlockUtil {
 	
 	public int getFarmerPlaceXP(Material block){
 		switch(block){
-			case SEEDS: case PUMPKIN_SEEDS: case MELON_SEEDS: case CACTUS: case CARROT: case POTATO: 
-			case SUGAR_CANE: case CROPS: return 2;
+			case BEETROOT_SEEDS: case PUMPKIN_SEEDS: case MELON_SEEDS: case WHEAT_SEEDS: case CACTUS: case CARROT: case POTATO: 
+			case SUGAR_CANE: case COCOA_BEANS:  return 2;
 			default: return 1;
 		}
 	}
 	
 	public boolean isInstaGrowable(Material block){
 		switch(block){
-			case CROPS: case PUMPKIN_STEM: case MELON_STEM: case CACTUS: case SUGAR_CANE_BLOCK: return true;
+			case PUMPKIN_STEM: case MELON_STEM: case CACTUS: case SUGAR_CANE: return true;
 			default: return false;
 		}
 	}

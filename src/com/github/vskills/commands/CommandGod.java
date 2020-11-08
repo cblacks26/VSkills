@@ -15,7 +15,6 @@ public class CommandGod implements CommandExecutor{
 	
 	UserManager userManager = Main.getUserManager();
 	
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("VGod")){
 			if(sender instanceof Player){

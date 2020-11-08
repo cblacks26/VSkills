@@ -47,7 +47,7 @@ public class EntityListener implements Listener{
             }else if(entityevent.getDamager() instanceof Player){
             	Player player = (Player) entityevent.getDamager();
             	UUID id = player.getUniqueId();
-            	ItemStack item = player.getItemInHand();
+            	ItemStack item = player.getInventory().getItemInMainHand();
             	int xp = entityUtil.getEntityXP(entity);
             	if(itemUtil.isSword(item)){
                     SkillXPGainEvent skillevent = new SkillXPGainEvent(id, SkillType.SWORD, xp);
@@ -80,11 +80,11 @@ public class EntityListener implements Listener{
 			Player player = (Player)event.getDamager();
 			UUID id = player.getUniqueId();
 			double damage = event.getDamage();
-			if(itemUtil.isUnarmed(player.getItemInHand())){
+			if(itemUtil.isUnarmed(player.getInventory().getItemInMainHand())){
 				double dmg = AbilitiesManager.runPowerPunch(id, damage);
 				event.setDamage(dmg);
 				userManager.getUser(id).scoreboard();
-			}else if(itemUtil.isSword(player.getItemInHand())){
+			}else if(itemUtil.isSword(player.getInventory().getItemInMainHand())){
 				double dmg = AbilitiesManager.runPowerSword(id, damage);
 				event.setDamage(dmg);
 				userManager.getUser(id).scoreboard();

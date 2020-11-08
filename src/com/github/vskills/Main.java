@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -32,6 +29,9 @@ import com.github.vskills.listeners.VSkillsListener;
 import com.github.vskills.runnables.UserSaveTask;
 import com.github.vskills.user.User;
 import com.github.vskills.util.UserManager;
+
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class Main extends JavaPlugin{
 	
@@ -118,7 +118,7 @@ public class Main extends JavaPlugin{
     }
 	
 	private boolean setupPermissions(){
-        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
         if (permissionProvider != null) {
             perms = permissionProvider.getProvider();
         }
@@ -208,8 +208,7 @@ public class Main extends JavaPlugin{
 
 	private void scheduledTasks(){
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, userSave, 10000L, 10000L);
-		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable()
-	    {
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable(){
 			public void run(){
 				for (Player p : Bukkit.getOnlinePlayers()){
 					User user = userManager.getUser(p.getUniqueId());

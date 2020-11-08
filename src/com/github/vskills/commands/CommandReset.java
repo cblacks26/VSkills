@@ -15,7 +15,7 @@ public class CommandReset implements CommandExecutor{
 
 	UserManager userManager = Main.getUserManager();
 	
-	@SuppressWarnings("deprecation")
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("VReset")){
 			if(sender instanceof Player){
@@ -27,7 +27,7 @@ public class CommandReset implements CommandExecutor{
 						return true;
 					}
 					if(tplayer == null){
-						tplayer = (Bukkit.getServer().getOfflinePlayer(args[0]));
+						tplayer = (Bukkit.getServer().getOfflinePlayerIfCached(args[0]));
 						if(tplayer.hasPlayedBefore()){
 							userManager.getUser(tplayer.getUniqueId()).resetUser();
 							player.sendMessage(ChatColor.GOLD + "You reset " + tplayer.getName());
@@ -53,7 +53,7 @@ public class CommandReset implements CommandExecutor{
 				if(args.length == 1){
 					OfflinePlayer tplayer = (Bukkit.getServer().getPlayer(args[0]));
 					if(tplayer == null){
-						tplayer = (Bukkit.getServer().getOfflinePlayer(args[0]));
+						tplayer = (Bukkit.getServer().getOfflinePlayerIfCached(args[0]));
 						if(tplayer.hasPlayedBefore()){
 							userManager.getUser(tplayer.getUniqueId()).resetUser();
 							return true;
